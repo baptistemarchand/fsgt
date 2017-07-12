@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+          <h2>Salut {{username}} !</h2>
+          
+          <div class="alert alert-info">
+            
+            {% if status == 'new' %}
+            <p>Bienvenue et merci de ton intérêt pour notre club !</p>
+            <p>Quand les inscriptions ouvrirons tu recevras un mail pour participer au tirage au sort.</p>
+
+            {% elseif status == 'lottery_open' %}
+            <p>Le tirage au sort est ouvert !</p>
+            <button class="btn btn-primary">Participer</button>
+
+            {% elseif status == 'in_lottery' %}
+            <p>Tu es inscrit(e) au tirage au sort.</p>
+            <p>Tu sera averti(e) par mail quand nous aurons les résultats</p>
+
+            {% elseif status == 'won_lottery' %}
+            <p>Félicitation ! Tu as été tiré(e) au sort !</p>
+            <p>Tu dois maintenant payer ta cotisation et uploader ton certificat médical</p>
+
+            <form action="/app_dev.php/charge" method="post" id="payment-form" style="margin-top:20px">
+              <div class="form-row">
+                <label for="card-element">
+                  Paiement en ligne
+                </label>
+                <div style="height:50px">
+                  <div id="card-element" style="float:left; width:500px;margin-right:50px" >
+                    <!-- a Stripe Element will be inserted here. -->
+                  </div>
+                  
+                  <button style="float:left" class="btn btn-primary">Payer 80€</button>
+                </div>
+                
+                <!-- Used to display Element errors -->
+                <div id="card-errors" role="alert"></div>
+              </div>
+            </form>
+
+            {% elseif status == 'lost_lottery' %}
+            <p>Mauvaise nouvelle, tu n'as pas été tiré(e) au sort :(</p>
+            <p>Nous t'avons placé(e) dans notre liste d'attente et tu recevra un mail au prochaines inscriptions</p>
+            
+            {% elseif status == 'waiting_payment_validation' %}
+            <p>Ton paiement est en train d'être validé</p>
+
+            {% elseif status == 'waiting_skill_check' %}
+            <p>Ton paiement a été validé. Tu y es presque !</p>
+            <p>Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.</p>
+            <p>Une fois validé(e) tu sera officiellement membre des Trois Mousquetons !</p>
+            
+            {% elseif status == 'member' %}
+            <p>Tu es membre des Trois Mousquetons.</p>
+            
+            {% elseif status == 'waiting_for_documents' %}
+            <p>Tu dois payer / uploader ton certificat médical</p>
+
+            {% else %}
+            <p>Status: {{status}}</p>
+            {% endif %}
+
+          </div>
+
+          {% for status in ['new', 'lottery_open', 'in_lottery', 'won_lottery', 'lost_lottery', 'waiting_skill_check', 'member', 'waiting_for_documents', 'test'] %}
+          <a href="{{ path('change_status', {'status': status}) }}" class="btn btn-default">{{status}}<a>
+          {% endfor %}
+          
+        </div>
+        
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body { background: #F5F5F5; font: 18px/1.5 sans-serif; }
+    h1, h2 { line-height: 1.2; margin: 0 0 .5em; }
+    h1 { font-size: 36px; }
+    h2 { font-size: 21px; margin-bottom: 1em; }
+    p { margin: 0 0 1em 0; }
+    a { color: #0000F0; }
+    a:hover { text-decoration: none; }
+    code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break-word; }
+    #wrapper { background: #FFF; margin: 1em auto; max-width: 800px; width: 95%; }
+    #container { padding: 2em; }
+    #welcome, #status { margin-bottom: 2em; }
+    #welcome h1 span { display: block; font-size: 75%; }
+    #icon-status, #icon-book { float: left; height: 64px; margin-right: 1em; margin-top: -4px; width: 64px; }
+    #icon-book { display: none; }
+
+    @media (min-width: 768px) {
+        #wrapper { width: 80%; margin: 2em auto; }
+        #icon-book { display: inline-block; }
+        #status a, #next a { display: block; }
+
+        @-webkit-keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+        .sf-toolbar { opacity: 0; -webkit-animation: fade-in 1s .2s forwards; animation: fade-in 1s .2s forwards;}
+    }
+</style>
+{% endblock %}
