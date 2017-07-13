@@ -69,6 +69,9 @@ class UserController extends Controller
               ->add('phone_number', null, [
                   'label' => 'Téléphone',
               ])
+              ->add('does_not_need_training', null, [
+                  'label' => 'Je sais grimper et assurer en tête',
+              ])
               ->add('save', SubmitType::class, [
                   'label' => 'Enregistrer',
               ])

@@ -82,6 +82,16 @@ class User extends BaseUser
      *
      */
     public $licence_id;
+    /**
+     * @ORM\Column(type="boolean", length=255, nullable=true)
+     *
+     */
+    public $does_not_need_training;
+    /**
+     * @ORM\Column(type="boolean", length=255, nullable=true)
+     *
+     */
+    public $skill_checked;
         
     public function __construct()
     {
