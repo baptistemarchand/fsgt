@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% block content %}
+<div style="width: 500px; margin: 0 auto; margin-top: 100px;" class="alert alert-info">
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+</div>
+  {% endblock %}
+{% endblock %}

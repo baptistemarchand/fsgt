@@ -31,3 +31,14 @@ $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
   background-color: #fefde5 !important;
   }
   
+.login-main  {
+display: flex;
+align-items: center;
+height: 100%;
+background-image: url('http://tinyimg.io/img/background.jpg');
+background-size:cover;
+}
+
+#login-form {
+width: 500px;
+}

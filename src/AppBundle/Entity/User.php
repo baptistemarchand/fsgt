@@ -66,7 +66,7 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=255, nullable=true)
      *
      */
-    public $adress;
+    public $address;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
