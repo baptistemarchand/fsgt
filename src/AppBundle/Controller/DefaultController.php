@@ -18,9 +18,7 @@ class DefaultController extends Controller
         $user = $this->getUser();
         
         return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-            'username' => $user->getUsername(),
-            'status' => $user->status,
+            'user' => $user,
         ]);
     }
 

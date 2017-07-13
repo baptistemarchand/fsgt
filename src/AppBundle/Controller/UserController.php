@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -10,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 /**
  * @Route("/user")
@@ -35,7 +38,7 @@ class UserController extends Controller
     /**
      * @Route("/edit", name="edit_user")
      */
-    public function editUserAction()
+    public function editUserAction(Request $request)
     {
         $user = $this->getUser();
 
@@ -72,13 +75,34 @@ class UserController extends Controller
               ->add('does_not_need_training', null, [
                   'label' => 'Je sais grimper et assurer en tête',
               ])
+              ->add('medicalCertificateFile', VichFileType::class, [
+                  'label' => 'Certificat Médical',
+                  'required' => false,
+                  'allow_delete' => false,
+              ])
               ->add('save', SubmitType::class, [
                   'label' => 'Enregistrer',
               ])
               ->getForm();
 
-        return $this->render('user/edit.html.twig', array(
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $form->getData() holds the submitted values
+            // but, the original `$task` variable has also been updated
+            $user = $form->getData();
+
+            // ... perform some action, such as saving the task to the database
+            // for example, if Task is a Doctrine entity, save it!
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute('homepage');
+        }
+        
+        return $this->render('user/edit.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
     }
 }
