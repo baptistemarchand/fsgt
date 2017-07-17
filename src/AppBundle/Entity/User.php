@@ -138,7 +138,14 @@ class User extends BaseUser
      * @ORM\Column(type="boolean", length=255, nullable=true)
      */
     public $skill_checked = false;
-        
+
+    public function setEmail($email)
+    {
+        $this->setUsername($email);
+
+        return parent::setEmail($email);
+    }
+    
     public function __construct()
     {
         parent::__construct();

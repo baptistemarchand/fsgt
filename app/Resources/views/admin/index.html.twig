@@ -6,7 +6,7 @@
     <h2>Admin</h2>
 
     <div class="alert">
-      <button class="btn btn-primary">Ouvrir le tirage au sort</button>
+      <a href="{{path('open_lottery')}}"><button class="btn btn-primary" >Ouvrir le tirage au sort</button></a>
       <button class="btn btn-primary">Finir le tirage au sort</button>
     </div>
           
@@ -14,10 +14,12 @@
       <thead>
         <tr>
           <th>Nom</th>
+          <th>Email</th>
           <th>Status</th>
           <th>Validation</th>
           <th>Certificat Médical</th>
           <th>Paiement</th>
+          <th>Activé</th>
         </tr>
       </thead>
       {% for user in users %}
@@ -26,13 +28,16 @@
           {{ user.first_name }} {{ user.last_name }}
         </td>
         <td>
+          {{ user.email }}
+        </td>
+        <td>
           {{ user.status | trans }}
         </td>
         <td>
           {% if user.skill_checked %}
           Validé(e)
           {% else %}
-          <a href="{{path('set_skill_checked', {user_id: user.id})}}">
+          <a href="{{path('set_skill_checked', {id: user.id})}}">
             <button class="btn btn-success" style="width: 100%;">Marquer comme Validé(e)</button>
           </a>
           {% endif %}
@@ -47,7 +52,9 @@
           {{user.stripe_charge_id}}
           {% endif %}
         </td>
-          
+        <td>
+          {{ user.enabled ? 'Oui' : 'Non' }}
+        </td>
       </tr>
       {% endfor %}
     </table>
