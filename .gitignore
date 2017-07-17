@@ -16,3 +16,6 @@
 /vendor/
 /web/bundles/
 node_modules
+*~
+\#*\#
+web/medical_certificates

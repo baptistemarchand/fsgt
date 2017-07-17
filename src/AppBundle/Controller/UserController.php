@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -13,6 +14,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Vich\UploaderBundle\Form\Type\VichFileType;
+
+use AppBundle\Entity\User;
 
 /**
  * @Route("/user")
@@ -33,6 +36,23 @@ class UserController extends Controller
         $em->flush();
         
         return $this->redirectToRoute('homepage');
+    }
+    
+    /**
+     * @Route("/set_skill_checked/{id}", name="set_skill_checked")
+     */
+    public function setSkillCheckedAction(User $user)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
+
+        if ($user->skill_checked !== true) {
+            $em = $this->get('doctrine')->getManager();
+            $user->skill_checked = true;
+            $em->persist($user);
+            $em->flush();
+        }
+        
+        return $this->redirectToRoute('admin_panel');
     }
 
     /**

@@ -17,7 +17,7 @@
 
             {% elseif user.status == 'lottery_open' %}
             <p>Le tirage au sort est ouvert !</p>
-            <a href="{{ path('change_user.status', {'user.status': 'in_lottery'}) }}">
+            <a href="{{ path('change_status', {'status': 'in_lottery'}) }}">
               <button class="btn btn-primary">Participer</button>
             </a>
 
