@@ -26,10 +26,20 @@ class UserController extends Controller
      */
     public function changeStatusAction(Request $request, string $status)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
+        $user = $this->getUser();
+
+        if ($status === 'in_lottery')
+        {
+            if (!$user->basicInfoFilled())
+                throw new \Exception('Missing some required fields in profile');
+        }
+        
+        if ($status !== 'in_lottery' || !in_array($user->status, ['new', 'waiting_list', 'lottery_open']))
+            $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
         
         $em = $this->get('doctrine')->getManager();
-        $user = $this->getUser();
+
+
         $user->status = $status;
         $em->persist($user);
         $em->flush();
@@ -64,16 +74,20 @@ class UserController extends Controller
         $form = $this->createFormBuilder($user)
               ->add('email', null, [
                   'label' => 'Email',
+                  'required' => true,
               ])
               ->add('first_name', null, [
                   'label' => 'Prénom',
+                  'required' => true,
               ])
               ->add('last_name', null, [
                   'label' => 'Nom',
+                  'required' => true,
               ])
               ->add('birthday', null, [
                   'widget' => 'single_text',
                   'label' => 'Date de naissance',
+                  'required' => true,
               ])
               ->add('gender', ChoiceType::class, [
                   'label' => 'Sexe',
@@ -106,13 +120,11 @@ class UserController extends Controller
 
         $form->handleRequest($request);
         
-        if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
+        if ($form->isSubmitted() && $form->isValid())
+        {
             $user = $form->getData();
-
-            // ... perform some action, such as saving the task to the database
-            // for example, if Task is a Doctrine entity, save it!
+            if ($user->basicInfoFilled())
+                $user->basic_info_filled = true;
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();

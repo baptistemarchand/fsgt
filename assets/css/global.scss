@@ -42,3 +42,7 @@ background-size:cover;
 #login-form {
 width: 500px;
 }
+
+.required::after {
+    content: ' *';
+}

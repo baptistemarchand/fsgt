@@ -5,12 +5,12 @@
         <div id="container">
           <h2>Salut {{user.first_name}} !</h2>
 
-          <a href="{{ path('admin_panel') }}" class="btn btn-default">admin<a>
-              <a href="{{ path('edit_user') }}" class="btn btn-default">Editer son profil<a>
+          <a href="{{ path('admin_panel') }}" class="btn btn-default">admin</a>
+          <a href="{{ path('edit_user') }}" class="btn btn-default">Editer son profil</a>
           
           {% if user.medicalCertificateName %}
-          <a href="{{ vich_uploader_asset(user, 'medicalCertificateFile') }}"/>Certificat Médical</a>
-{% endif %}
+          <a href="{{ vich_uploader_asset(user, 'medicalCertificateFile') }}">Certificat Médical</a>
+          {% endif %}
           
           <div class="alert alert-info">
             
@@ -20,9 +20,13 @@
 
             {% elseif user.status == 'lottery_open' %}
             <p>Le tirage au sort est ouvert !</p>
+            {% if user.basic_info_filled %}
             <a href="{{ path('change_status', {'status': 'in_lottery'}) }}">
               <button class="btn btn-primary">Participer</button>
             </a>
+            {% else %}
+            <a href="{{ path('edit_user') }}" class="btn btn-default">Edite ton profil</a> pour pouvoir t'inscrire.
+            {% endif %}
 
             {% elseif user.status == 'in_lottery' %}
             <p>Tu es inscrit(e) au tirage au sort.</p>

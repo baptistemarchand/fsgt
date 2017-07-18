@@ -81,7 +81,15 @@ class User extends BaseUser
     }
 
 
-
+    public function basicInfoFilled()
+    {
+        return $this->first_name
+            && $this->last_name
+            && $this->birthday
+            && $this->email
+            && $this->gender
+        ;
+    }
 
     
     /**
@@ -131,13 +139,17 @@ class User extends BaseUser
      */
     public $licence_id;
     /**
-     * @ORM\Column(type="boolean", length=255, nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     public $does_not_need_training = false;
     /**
-     * @ORM\Column(type="boolean", length=255, nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     public $skill_checked = false;
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    public $basic_info_filled = false;
 
     public function setEmail($email)
     {

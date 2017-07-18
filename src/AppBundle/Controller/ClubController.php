@@ -23,7 +23,7 @@ class ClubController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
         
         $em = $this->get('doctrine')->getManager();
-        $users = $em->getRepository(User::class)->findAll();
+        $users = $em->getRepository(User::class)->findByStatus('new');
 
         $userEmails = array_map(function ($user) {
             return $user->getEmail();
