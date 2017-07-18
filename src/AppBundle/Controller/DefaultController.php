@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Entity\User;
+use AppBundle\Entity\Club;
 
 class DefaultController extends Controller
 {
@@ -19,6 +20,7 @@ class DefaultController extends Controller
         
         return $this->render('default/index.html.twig', [
             'user' => $user,
+            'club' => $this->get('doctrine')->getRepository(Club::class)->find(1),
         ]);
     }
     

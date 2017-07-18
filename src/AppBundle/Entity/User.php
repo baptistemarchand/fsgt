@@ -150,6 +150,10 @@ class User extends BaseUser
      * @ORM\Column(type="boolean", nullable=true)
      */
     public $basic_info_filled = false;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    public $temporary_lottery_status;
 
     public function setEmail($email)
     {

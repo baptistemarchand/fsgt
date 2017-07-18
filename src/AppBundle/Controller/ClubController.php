@@ -62,7 +62,7 @@ class ClubController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
         
         $em = $this->get('doctrine')->getManager();
-        $users = $em->getRepository(User::class)->findByStatus('new');
+        $users = $em->getRepository(User::class)->findByStatus(['new', 'in_waiting_list']);
 
         $userEmails = array_map(function ($user) {
             return $user->getEmail();
@@ -80,7 +80,7 @@ class ClubController extends Controller
             $this->get('mailer')->send($message);
 
         $em->getRepository(Club::class)->openLottery();
-        
+
         return $this->redirectToRoute('admin_panel', [
             'id' => $club->id,
         ]);
@@ -96,21 +96,20 @@ class ClubController extends Controller
         $em = $this->get('doctrine')->getManager();
         $em->getRepository(Club::class)->closeLottery();
 
-        $users = $em->getRepository(User::class)->findByStatus([
-            'in_lottery',
-            'selected',
-            'not_selected',
-        ]);
+        $users = $em->getRepository(User::class)->findByStatus('in_lottery');
 
+        if (count($users) === 0)
+            throw new \Exception('No users in lottery');
+        
         $maxWinners = 4;
         $winners = array_rand($users, min(count($users), $maxWinners));
 
         foreach($users as $i => $user)
         {
             if (in_array($i, $winners))
-                $user->status = 'selected';
+                $user->temporary_lottery_status = 'selected';
             else
-                $user->status = 'not_selected';
+                $user->temporary_lottery_status = 'not_selected';
             $em->persist($user);
         }
 
@@ -131,18 +130,16 @@ class ClubController extends Controller
         $em = $this->get('doctrine')->getManager();
         $em->getRepository(Club::class)->closeLottery();
 
-        $users = $em->getRepository(User::class)->findByStatus([
-            'selected',
-            'not_selected',
-        ]);
+        $users = $em->getRepository(User::class)->findByStatus('in_lottery');
 
         foreach($users as $user)
         {
-            if ($user->status === 'selected')
-                $user->status = 'won_lottery';
+            if ($user->temporary_lottery_status === 'selected')
+                $user->status = 'waiting_for_documents';
             else
-                $user->status = 'lost_lottery';
-
+                $user->status = 'in_waiting_list';
+            
+            $user->temporary_lottery_status = null;
             $em->persist($user);
         }
 

@@ -1,10 +1,15 @@
-member: Membre
 new: Intéressé
 in_lottery: Inscris au tirage au sort
+in_waiting_list: "Sur liste d'attente"
+waiting_for_documents: En attente de paiement / certificat
+waiting_skill_check: En attente de validation
+member: Membre
+
+
 bootstrap:
   selected: success
   won_lottery: success
   not_selected: danger
-  lost_lottery: danger
+  in_waiting_list: warning
   member: info
   

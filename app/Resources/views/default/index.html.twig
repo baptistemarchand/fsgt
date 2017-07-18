@@ -3,38 +3,34 @@
 {% block body %}
     <div id="wrapper">
         <div id="container">
-          <h2>Salut {{user.first_name}} !</h2>
+          <h2>[{{club.shortName}}] Salut {{user.first_name}} !</h2>
 
-          <a href="{{ path('admin_panel') }}" class="btn btn-default">admin</a>
-          <a href="{{ path('edit_user') }}" class="btn btn-default">Editer son profil</a>
-          
-          {% if user.medicalCertificateName %}
-          <a href="{{ vich_uploader_asset(user, 'medicalCertificateFile') }}">Certificat Médical</a>
-          {% endif %}
+          <a href="{{ path('admin_panel', {id: 1}) }}" class="">admin</a> | 
+          <a href="{{ path('edit_user') }}" class="">editer son profil</a>
           
           <div class="alert alert-info">
             
             {% if user.status == 'new' %}
-            <p>Bienvenue et merci de ton intérêt pour notre club !</p>
-            <p>Quand les inscriptions ouvrirons tu recevras un mail pour participer au tirage au sort.</p>
-
-            {% elseif user.status == 'lottery_open' %}
-            <p>Le tirage au sort est ouvert !</p>
-            {% if user.basic_info_filled %}
-            <a href="{{ path('change_status', {'status': 'in_lottery'}) }}">
-              <button class="btn btn-primary">Participer</button>
-            </a>
-            {% else %}
-            <a href="{{ path('edit_user') }}" class="btn btn-default">Edite ton profil</a> pour pouvoir t'inscrire.
-            {% endif %}
+                {% if club.status == 'lottery_closed' %}
+                    <p>Bienvenue et merci de ton intérêt pour notre club !</p>
+                    <p>Quand les inscriptions ouvrirons tu recevras un mail pour participer au tirage au sort.</p>
+                {% else %}
+                    <p>Le tirage au sort est ouvert !</p>
+                    {% if user.basic_info_filled %}
+                        <a href="{{ path('change_status', {'status': 'in_lottery'}) }}">
+                          <button class="btn btn-primary">Participer</button>
+                        </a>
+                    {% else %}
+                        <a href="{{ path('edit_user') }}" class="btn btn-default">Edite ton profil</a> pour pouvoir t'inscrire.
+                        {% endif %}
+                {% endif %}
 
             {% elseif user.status == 'in_lottery' %}
             <p>Tu es inscrit(e) au tirage au sort.</p>
             <p>Tu sera averti(e) par mail quand nous aurons les résultats</p>
 
-            {% elseif user.status == 'won_lottery' %}
-            <p>Félicitation ! Tu as été tiré(e) au sort !</p>
-            <p>Tu dois maintenant payer ta cotisation et uploader ton certificat médical</p>
+            {% elseif user.status == 'waiting_for_documents' %}
+            <p>Tu dois payer ta cotisation et uploader ton certificat médical</p>
 
             <form action="/app_dev.php/charge" method="post" id="payment-form" style="margin-top:20px">
               <div class="form-row">
@@ -54,13 +50,9 @@
               </div>
             </form>
 
-            {% elseif user.status == 'lost_lottery' %}
-            <p>Mauvaise nouvelle, tu n'as pas été tiré(e) au sort :(</p>
-            <p>Nous t'avons placé(e) dans notre liste d'attente et tu recevra un mail au prochaines inscriptions</p>
+            {% elseif user.status == 'in_waiting_list' %}
+            <p>Tu es dans notre liste d'attente et tu recevra un mail au prochaines inscriptions</p>
             
-            {% elseif user.status == 'waiting_payment_validation' %}
-            <p>Ton paiement est en train d'être validé</p>
-
             {% elseif user.status == 'waiting_skill_check' %}
             <p>Ton paiement a été validé. Tu y es presque !</p>
             <p>Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.</p>
@@ -69,16 +61,13 @@
             {% elseif user.status == 'member' %}
             <p>Tu es membre des Trois Mousquetons. Bonne grimpe !</p>
             
-            {% elseif user.status == 'waiting_for_documents' %}
-            <p>Tu dois payer / uploader ton certificat médical</p>
-
             {% else %}
-            <p>User.Status: {{user.status}}</p>
+            <p>Status: {{user.status}}</p>
             {% endif %}
 
           </div>
 
-          {% for status in ['new', 'lottery_open', 'in_lottery', 'won_lottery', 'lost_lottery', 'waiting_skill_check', 'member', 'waiting_for_documents'] %}
+          {% for status in ['new', 'in_lottery', 'in_waiting_list', 'waiting_for_documents', 'waiting_skill_check', 'member'] %}
           <a href="{{ path('change_status', {'status': status}) }}" class="btn btn-default">{{status}}<a>
           {% endfor %}
           

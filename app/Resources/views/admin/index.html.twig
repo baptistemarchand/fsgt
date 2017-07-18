@@ -3,7 +3,7 @@
 {% block body %}
 <div id="wrapper">
   <div id="container">
-    <h2>{{club.name}}</h2>
+    <a href="{{path('homepage')}}"><h2>{{club.name}}</h2></a>
 
     <div class="alert">
       <p>Status: {{club.status}}</p>
@@ -36,7 +36,7 @@
         <td>
           {{ user.email }}
         </td>
-        <td class="{{ ('bootstrap.' ~ user.status) | trans }}">
+        <td class="{% if user.status == 'in_lottery' %}{{ ('bootstrap.' ~ user.temporary_lottery_status) | trans }}{%else%}{{ ('bootstrap.' ~ user.status) | trans }}{%endif%}">
           {{ user.status | trans }}
         </td>
         <td>
