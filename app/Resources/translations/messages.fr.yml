@@ -1,3 +1,10 @@
 member: Membre
 new: Intéressé
 in_lottery: Inscris au tirage au sort
+bootstrap:
+  selected: success
+  won_lottery: success
+  not_selected: danger
+  lost_lottery: danger
+  member: info
+  

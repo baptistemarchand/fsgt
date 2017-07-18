@@ -21,21 +21,6 @@ class DefaultController extends Controller
             'user' => $user,
         ]);
     }
-
-    /**
-     * @Route("/admin", name="admin_panel")
-     */
-    public function adminPanelAction(Request $request)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
-
-        $em = $this->get('doctrine')->getManager();
-        $users = $em->getRepository(User::class)->findAll();
-
-        return $this->render('admin/index.html.twig', [
-            'users' => $users,
-        ]);
-    }
     
     /**
      * @Route("/charge", name="charge")

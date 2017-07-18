@@ -48,23 +48,6 @@ class UserController extends Controller
     }
     
     /**
-     * @Route("/set_skill_checked/{id}", name="set_skill_checked")
-     */
-    public function setSkillCheckedAction(User $user)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
-
-        if ($user->skill_checked !== true) {
-            $em = $this->get('doctrine')->getManager();
-            $user->skill_checked = true;
-            $em->persist($user);
-            $em->flush();
-        }
-        
-        return $this->redirectToRoute('admin_panel');
-    }
-
-    /**
      * @Route("/edit", name="edit_user")
      */
     public function editUserAction(Request $request)
