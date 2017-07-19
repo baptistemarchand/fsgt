@@ -99,7 +99,7 @@ class ClubController extends Controller
                      'text/html'
                  );
 
-        if (false) // FIXME
+        if (true) // FIXME
             $this->get('mailer')->send($message);
 
         $em->getRepository(Club::class)->openLottery();
