@@ -31,7 +31,9 @@
 
             {% elseif user.status == 'waiting_for_documents' %}
             <p>Tu dois payer ta cotisation et uploader ton certificat médical</p>
-
+            {% if user.payment_status == 'processing' %}
+            Ton paiement est en cours.
+            {% else %}
             <form action="/app_dev.php/charge" method="post" id="payment-form" style="margin-top:20px">
               <div class="form-row">
                 <label for="card-element">
@@ -49,6 +51,7 @@
                 <div id="card-errors" role="alert"></div>
               </div>
             </form>
+            {% endif %}
 
             {% elseif user.status == 'in_waiting_list' %}
             <p>Tu es dans notre liste d'attente et tu recevra un mail au prochaines inscriptions</p>

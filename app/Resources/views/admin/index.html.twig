@@ -54,10 +54,8 @@
           {% endif %}
         </td>
         <td>
-          {% if user.stripe_charge_id %}
-          {{user.stripe_charge_id}}
-          {% endif %}
-        </td>
+          {{user.payment_status}}
+         </td>
         <td>
           {{ user.enabled ? 'Oui' : 'Non' }}
         </td>

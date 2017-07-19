@@ -45,6 +45,8 @@ class ClubController extends Controller
         if ($user->skill_checked !== true) {
             $em = $this->get('doctrine')->getManager();
             $user->skill_checked = true;
+            if ($user->status === 'waiting_skill_check')
+                $user->status = 'member';
             $em->persist($user);
             $em->flush();
         }

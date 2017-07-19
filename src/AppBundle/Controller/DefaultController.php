@@ -44,7 +44,7 @@ class DefaultController extends Controller
         $user = $this->getUser();
         $em = $this->get('doctrine')->getManager();
         $user->stripe_charge_id = $charge['id'];
-        $user->status = 'waiting_payment_validation';
+        $user->payment_status = 'processing';
         $em->persist($user);
         $em->flush();
 
@@ -56,6 +56,7 @@ class DefaultController extends Controller
      */
     public function stripeAction(Request $request)
     {
+        try {
         \Stripe\Stripe::setApiKey($this->getParameter('stripe_test_token'));
         $endpoint_secret = $this->getParameter('stripe_endpoint_secret');
 
@@ -69,18 +70,16 @@ class DefaultController extends Controller
             );
         } catch(\UnexpectedValueException $e) {
             // Invalid payload
-            die('lol');
-            http_response_code(400); // PHP 5.4 or greater
-            exit();
+            throw new \Exception($e->getMessage());
         } catch(\Stripe\Error\SignatureVerification $e) {
-                        die($e);
-            // Invalid signature
-            http_response_code(400); // PHP 5.4 or greater
-            exit();
+            throw new \Exception($e->getMessage());
         }
 
         if ($event['type'] !== 'charge.succeeded')
-            die('wrong event');
+            return $this->json([
+                'message' => 'type not handled',
+                'type' => $event['type'],
+            ]);
         
         $charge_id = $event['data']['object']['id'];
 
@@ -91,10 +90,13 @@ class DefaultController extends Controller
         ]);
 
         if ($user === null)
-            die('No user found with this charge id.');
-        
-        $user->status = 'waiting_skill_check';
+            throw new \Exception('No user found with this charge id.');
 
+        if ($user->getmedicalCertificateName())
+            $user->status = $user->skill_checked ? 'member' : 'waiting_skill_check';
+
+        $user->payment_status = 'paid';
+        
         $em = $this->get('doctrine')->getManager();
 
         $em->persist($user);
@@ -103,6 +105,11 @@ class DefaultController extends Controller
         return $this->json([
             'success' => true,
         ]);
+        } catch (\Exception $e){
+            return $this->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 }
