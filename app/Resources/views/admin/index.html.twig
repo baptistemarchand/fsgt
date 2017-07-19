@@ -26,6 +26,7 @@
           <th>Certificat Médical</th>
           <th>Paiement</th>
           <th>Activé</th>
+          <th>Reset</th>
         </tr>
       </thead>
       {% for user in users %}
@@ -58,6 +59,11 @@
          </td>
         <td>
           {{ user.enabled ? 'Oui' : 'Non' }}
+        </td>
+        <td>
+          <a href="{{path('reset_user', {id: club.id, user_id: user.id})}}">
+            <button class="btn" style="width: 100%;">Reset</button>
+          </a>
         </td>
       </tr>
       {% endfor %}

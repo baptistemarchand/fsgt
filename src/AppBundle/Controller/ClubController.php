@@ -55,6 +55,27 @@ class ClubController extends Controller
             'id' => $club->id,
         ]);
     }
+
+    /**
+     * @Route("/{id}/reset_user/{user_id}", name="reset_user")
+     * @ParamConverter("user", class="AppBundle:User", options={"id" = "user_id"})
+     */
+    public function resetUserAction(Club $club, User $user)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
+
+        $em = $this->get('doctrine')->getManager();
+        $user->skill_checked = false;
+        $user->status = 'new';
+        $user->payment_status = null;
+        $user->setMedicalCertificateName(null);
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_panel', [
+            'id' => $club->id,
+        ]);
+    }
     
     /**
      * @Route("/{id}/open_lottery", name="open_lottery")
