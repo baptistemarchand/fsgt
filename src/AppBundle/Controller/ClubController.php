@@ -121,11 +121,10 @@ class ClubController extends Controller
 
         $users = $em->getRepository(User::class)->findByStatus('in_lottery');
 
-        if (count($users) === 0)
-            throw new \Exception('No users in lottery');
+        if (count($users) <= 1)
+            throw new \Exception('No enough users in lottery');
         
-        $maxWinners = 4;
-        $winners = array_rand($users, min(count($users), $maxWinners));
+        $winners = array_rand($users, min(count($users), $club->maxWinners));
 
         foreach($users as $i => $user)
         {
@@ -155,12 +154,21 @@ class ClubController extends Controller
 
         $users = $em->getRepository(User::class)->findByStatus('in_lottery');
 
+        $winnerEmails = [];
+        $loserEmails = [];
+        
         foreach($users as $user)
         {
             if ($user->temporary_lottery_status === 'selected')
+            {
                 $user->status = 'waiting_for_documents';
+                $winnerEmails[] = $user->getEmail();
+            }
             else
+            {
                 $user->status = 'in_waiting_list';
+                $loserEmails[] = $user->getEmail();
+            }
             
             $user->temporary_lottery_status = null;
             $em->persist($user);
@@ -168,6 +176,28 @@ class ClubController extends Controller
 
         $em->flush();
 
+        $winnerMessage = (new \Swift_Message('Résultats du tirage au sort'))
+                 ->setFrom('contact@troismousquetons.com')
+                 ->setBcc($winnerEmails)
+                 ->setBody(
+                     $this->renderView('email/lottery_winners.html.twig'),
+                     'text/html'
+                 );
+        $loserMessage = (new \Swift_Message('Résultats du tirage au sort'))
+                 ->setFrom('contact@troismousquetons.com')
+                 ->setBcc($loserEmails)
+                 ->setBody(
+                     $this->renderView('email/lottery_losers.html.twig'),
+                     'text/html'
+                 );
+        
+        if (true) // FIXME
+        {
+            $this->get('mailer')->send($winnerMessage);
+            $this->get('mailer')->send($loserMessage);
+        }
+
+        
         return $this->redirectToRoute('admin_panel', [
             'id' => $club->id,
         ]);

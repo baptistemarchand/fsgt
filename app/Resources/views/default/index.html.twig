@@ -32,14 +32,18 @@
             <p>Tu sera averti(e) par mail quand nous aurons les résultats</p>
 
             {% elseif user.status == 'waiting_for_documents' %}
-            <p>Tu dois payer ta cotisation et uploader ton certificat médical</p>
+            <p>Les choses qu'il te reste à faire:</p>
+            {% if not user.medicalCertificateName %}
+            <a href="{{ path('edit_user') }}" class="btn btn-primary">uploader ton certificat médical</a></p>
+            {% endif %}
             {% if user.payment_status == 'processing' %}
             Ton paiement est en cours.
-            {% else %}
+            {% elseif user.payment_status != 'paid' %}
+
             <form action="/app_dev.php/charge" method="post" id="payment-form" style="margin-top:20px">
               <div class="form-row">
                 <label for="card-element">
-                  Paiement en ligne
+                  Payer ta cotisation
                 </label>
                 <div style="height:50px">
                   <div id="card-element" style="float:left; width:500px;margin-right:50px" >
