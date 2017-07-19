@@ -40,6 +40,10 @@
             Ton paiement est en cours.
             {% elseif user.payment_status != 'paid' %}
 
+{% if use_live_stripe %}
+<div class="alert alert-danger">!!!USING LIVE STRIPE!!!</div>
+{% endif %}
+
             <form action="/app_dev.php/charge" method="post" id="payment-form" style="margin-top:20px">
               <div class="form-row">
                 <label for="card-element">

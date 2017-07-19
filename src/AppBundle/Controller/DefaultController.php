@@ -34,9 +34,11 @@ class DefaultController extends Controller
         if ($token === null)
             throw new \Exception('Null stripe token');
         
-        \Stripe\Stripe::setApiKey($this->getParameter('stripe_test_token'));
+        $use_live_stripe = $this->getParameter('use_live_stripe');
+
+        \Stripe\Stripe::setApiKey($this->getParameter($use_live_stripe ? 'stripe_live_token' : 'stripe_test_token'));
         $charge = \Stripe\Charge::create([
-            'amount' => 80 * 100,
+            'amount' => 0.5 * 100,
             'currency' => 'eur',
             'source' => $token
         ]);
@@ -52,13 +54,13 @@ class DefaultController extends Controller
     }
     
     /**
-     * @Route("/stripe", name="stripe")
+     * @Route("/stripe/{mode}", name="stripe")
      */
-    public function stripeAction(Request $request)
+    public function stripeAction(Request $request, string $mode)
     {
         try {
         \Stripe\Stripe::setApiKey($this->getParameter('stripe_test_token'));
-        $endpoint_secret = $this->getParameter('stripe_endpoint_secret');
+        $endpoint_secret = $this->getParameter($mode === 'live' ? 'stripe_endpoint_secret_live' : 'stripe_endpoint_secret_test');
 
         $payload = $request->getContent();
         $sig_header = $request->headers->get("stripe_signature");

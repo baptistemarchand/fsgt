@@ -48,6 +48,5 @@ class Club
      * @ORM\Column(name="max_winners", type="integer")
      */
     public $maxWinners = 0;
-
 }
 

@@ -1,4 +1,3 @@
-var stripe = Stripe('pk_test_TRg4a2iSWUBcPsTeHChtD5OY');
 var elements = stripe.elements();
 
 // Custom styling can be passed to options when creating an Element.

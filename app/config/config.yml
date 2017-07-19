@@ -40,6 +40,10 @@ twig:
     form_themes:
         - 'bootstrap_3_layout.html.twig'
         - 'VichUploaderBundle:Form:fields.html.twig'
+    globals:
+      use_live_stripe: '%use_live_stripe%'
+      stripe_pk_live: pk_live_bfNJ1zkGYlXlZaE3xXvu4VSP
+      stripe_pk_test: pk_test_TRg4a2iSWUBcPsTeHChtD5OY
 
 # Doctrine Configuration
 doctrine:

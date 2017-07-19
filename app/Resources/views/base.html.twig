@@ -9,9 +9,17 @@
         <link rel="stylesheet" href="{{ asset('build/global.css') }}">
     </head>
     <body>
+      {% block body %}{% endblock %}
+      {% block javascripts %}
       <script src="https://js.stripe.com/v3/"></script>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-        <script src="{{ asset('build/app.js') }}"></script>
+      <script>
+        {% if use_live_stripe %}
+        var stripe = Stripe('{{stripe_pk_live}}');
+        {% else %}
+        var stripe = Stripe('{{stripe_pk_test}}');
+        {% endif %}
+      </script>
+      <script src="{{ asset('build/app.js') }}"></script>
+      {% endblock %}
     </body>
 </html>
