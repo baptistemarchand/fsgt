@@ -11,9 +11,9 @@
     </div>
     
     <div class="alert">
-      <a href="{{path('open_lottery', {id: club.id})}}"><button class="btn btn-primary" >Ouvrir le tirage au sort</button></a>
-      <a href="{{path('test_lottery', {id: club.id})}}"><button class="btn btn-primary" >Tester le tirage au sort</button></a>
-      <a href="{{path('finish_lottery', {id: club.id})}}"><button class="btn btn-primary" >Valider le tirage au sort</button></a>
+      <a href="{{path('open_lottery', {id: club.id})}}"><button class="btn btn-primary">Ouvrir le tirage au sort</button></a>
+      <a href="{{path('test_lottery', {id: club.id})}}"><button class="btn btn-primary" {% if not users_in_lottery %} disabled {% endif %}>Tester le tirage au sort</button></a>
+      <a href="{{path('finish_lottery', {id: club.id})}}"><button class="btn btn-primary" {% if not lottery_ready %} disabled {% endif %}>Valider le tirage au sort</button></a>
     </div>
           
     <table class="table table-hover table-bordered table-sm">

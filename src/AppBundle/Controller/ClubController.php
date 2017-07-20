@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use Exception;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -28,9 +30,17 @@ class ClubController extends Controller
             'id' => 'ASC',
         ]);
 
+        $users_in_lottery = array_filter($users, function($user) {
+            return $user->status === 'in_lottery';
+        });
+
         return $this->render('admin/index.html.twig', [
             'users' => $users,
             'club' => $club,
+            'users_in_lottery' => !!count($users_in_lottery),
+            'lottery_ready' => !!count(array_filter($users_in_lottery, function($user) {
+                return $user->temporary_lottery_status !== null;
+            })),
         ]);
     }
 
@@ -99,8 +109,7 @@ class ClubController extends Controller
                      'text/html'
                  );
 
-        if (true) // FIXME
-            $this->get('mailer')->send($message);
+        $this->get('mailer')->send($message);
 
         $em->getRepository(Club::class)->openLottery();
 
@@ -121,10 +130,14 @@ class ClubController extends Controller
 
         $users = $em->getRepository(User::class)->findByStatus('in_lottery');
 
-        if (count($users) <= 1)
-            throw new \Exception('No enough users in lottery');
+        if (count($users) === 0)
+            throw new Exception('No users in lottery');
         
         $winners = array_rand($users, min(count($users), $club->maxWinners));
+
+        // Necessary when there is only one user in the lottery
+        if (!is_array($winners))
+            $winners = [$winners];
 
         foreach($users as $i => $user)
         {
@@ -164,11 +177,13 @@ class ClubController extends Controller
                 $user->status = 'waiting_for_documents';
                 $winnerEmails[] = $user->getEmail();
             }
-            else
+            elseif ($user->temporary_lottery_status === 'not_selected')
             {
                 $user->status = 'in_waiting_list';
                 $loserEmails[] = $user->getEmail();
             }
+            else
+                throw new Exception('User in lottery without temporary_lottery_satus set');
             
             $user->temporary_lottery_status = null;
             $em->persist($user);
@@ -190,13 +205,12 @@ class ClubController extends Controller
                      $this->renderView('email/lottery_losers.html.twig'),
                      'text/html'
                  );
-        
-        if (true) // FIXME
-        {
-            $this->get('mailer')->send($winnerMessage);
-            $this->get('mailer')->send($loserMessage);
-        }
 
+        if ($winnerEmails)
+            $this->get('mailer')->send($winnerMessage);
+
+        if ($loserEmails)
+            $this->get('mailer')->send($loserMessage);
         
         return $this->redirectToRoute('admin_panel', [
             'id' => $club->id,
