@@ -25,7 +25,7 @@ class DefaultController extends Controller
     }
     
     /**
-     * @Route("/charge", name="charge")
+     * @Route("/charge", name="stripe_charge")
      */
     public function chargeAction(Request $request)
     {
@@ -94,7 +94,7 @@ class DefaultController extends Controller
         if ($user === null)
             throw new \Exception('No user found with this charge id.');
 
-        if ($user->getmedicalCertificateName())
+        if ($user->getMedicalCertificateName())
             $user->status = $user->skill_checked ? 'member' : 'waiting_skill_check';
 
         $user->payment_status = 'paid';

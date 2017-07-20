@@ -109,7 +109,7 @@ class UserController extends Controller
             if ($user->basicInfoFilled())
                 $user->basic_info_filled = true;
             if ($user->getMedicalCertificateName() !== null && $user->payment_status === 'paid')
-                $user->status = 'waiting_skill_check';
+                $user->status = $user->skill_checked ? 'member' : 'waiting_skill_check';
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
