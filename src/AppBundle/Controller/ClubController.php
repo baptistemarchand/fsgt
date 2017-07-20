@@ -38,8 +38,8 @@ class ClubController extends Controller
             'users' => $users,
             'club' => $club,
             'users_in_lottery' => !!count($users_in_lottery),
-            'lottery_ready' => !!count(array_filter($users_in_lottery, function($user) {
-                return $user->temporary_lottery_status !== null;
+            'lottery_ready' => !count(array_filter($users_in_lottery, function($user) {
+                return $user->temporary_lottery_status === null;
             })),
         ]);
     }
