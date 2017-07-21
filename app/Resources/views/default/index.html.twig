@@ -1,118 +1,59 @@
 {% extends 'layout.html.twig' %}
 
 {% block content %}
-<div class="jumbotron">
+    <div class="jumbotron">
 
-  <h3>Salut{{' ' ~user.first_name}},</h3>
-  
-  {% if user.status == 'member' %}
-  <h1 class="display-4">Tu es membre des Trois Mousquetons. Bonne grimpe !</h1>
-  {% else %}
-  <p class="lead">Voici le status de ton inscription:</p>
-  
-  <div class="card text-center">
-
-    <div class="card-block">
-
-      <h4 class="card-title">{{user.status|trans}}</h4>
-      
-      {% if user.status == 'new' %}
-      
-        {% if club.status == 'lottery_closed' %}
-          <p>Bienvenue et merci de ton intérêt pour notre club !
-            Quand les inscriptions ouvrirons tu recevras un mail pour participer au tirage au sort.</p>
+        <h3>Salut{{' ' ~user.first_name}},</h3>
+        
+        {% if user.status == 'member' %}
+            <h1 class="display-4">Tu es membre des Trois Mousquetons. Bonne grimpe !</h1>
         {% else %}
-          <p>Le tirage au sort est ouvert !</p>
-          {% if user.basic_info_filled %}
-            <a href="{{ path('change_status', {'status': 'in_lottery'}) }}">
-              <button class="btn btn-success btn-lg">Participer</button>
-            </a>
-          {% else %}
-            <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Edite ton profile pour pouvoir t'inscrire</a>
-          {% endif %}
-        {% endif %}
-      
-      {% elseif user.status == 'in_lottery' %}
+            <p class="lead">Voici le status de ton inscription:</p>
             
-        <p>Tu sera averti(e) par mail quand nous aurons les résultats.</p>
-      
-      {% elseif user.status == 'waiting_for_documents' %}
-        
-        <p>Les choses qu'il te reste à faire:</p>
-        <div class="card-group">
-        
-        {% if not user.medicalCertificateName %}
-            <div class="card">
-              <div class="card-block">
-                <h4 class="card-title">Uploader ton certificat médical</h4>
-                <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Mon profile</a>
-              </div>
-            </div>
-        {% endif %}
-        
-        {% if user.payment_status != 'paid' %}
-            <div class="card">
-              <div class="card-block">
-                <h4 class="card-title">Payer la cotisation</h4>
-                
-                {% if user.payment_status == 'processing' %}
-                  <p class="lead">Ton paiement est en cours.</p>
-                {% else %}
-                
-                  {% if use_live_stripe %}
-                    <div class="alert alert-danger">!!!USING LIVE STRIPE!!!</div>
-                  {% endif %}
-                
-                  <form action="{{ path('stripe_charge') }}" method="post" id="payment-form">
-                    <div class="form-row">
-                      <div>
-                        <div id="card-element">
-                          <!-- a Stripe Element will be inserted here. -->
-                        </div>
-                        
-                        <button class="btn btn-lg btn-primary">Payer 80€</button>
-                      </div> <!-- -->
-                      <!-- Used to display Element errors -->
-                      <div id="card-errors" role="alert"></div>
-                    </div><!-- form-row -->
-                  </form>
-                {% endif %}
-              </div> <!-- card-block -->
+            <div class="card text-center">
+
+                <div class="card-block">
+
+                    <h4 class="card-title">{{user.status|trans}}</h4>
+                    
+                    {% if user.status == 'new' %}   
+                        {% include 'status/new.html.twig' %}
+                    {% elseif user.status == 'in_lottery' %}
+                        <p>Tu sera averti(e) par mail quand nous aurons les résultats.</p>
+                    {% elseif user.status == 'waiting_for_documents' %}
+                        {% include 'status/waiting_for_documents.html.twig' %}
+                    {% elseif user.status == 'in_waiting_list' %}
+                        <p>Tu es dans notre liste d'attente et tu recevra un mail au prochaines inscriptions</p>
+                    {% elseif user.status == 'waiting_skill_check' %}
+                        <p>
+                            Ton paiement a été validé. Tu y es presque !
+                            Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.
+                            Une fois validé(e) tu sera officiellement membre des Trois Mousquetons !
+                        </p>
+                    {% endif %}
+
+                </div> <!-- card-block -->
             </div> <!-- card -->
         {% endif %}
-        </div> <!-- card-group -->
         
-      {% elseif user.status == 'in_waiting_list' %}
-      <p>Tu es dans notre liste d'attente et tu recevra un mail au prochaines inscriptions</p>
-      
-      {% elseif user.status == 'waiting_skill_check' %}
-      <p>Ton paiement a été validé. Tu y es presque !
-        Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.
-        Une fois validé(e) tu sera officiellement membre des Trois Mousquetons !</p>
-      
-      {% endif %}
+    </div> <!-- jumbo -->
 
-    </div> <!-- card-block -->
-  </div> <!-- card -->
-  {% endif %}
-</div> <!-- jumbo -->
+    {% if is_granted('ROLE_ADMIN') %}
+        {% for status in ['new', 'in_lottery', 'in_waiting_list', 'waiting_for_documents', 'waiting_skill_check', 'member'] %}
+            <a href="{{ path('change_status', {'status': status}) }}" class="btn btn-secondary">{{status}}</a>
+        {% endfor %}
+    {% endif %}
 
-{% if is_granted('ROLE_ADMIN') %}
-{% for status in ['new', 'in_lottery', 'in_waiting_list', 'waiting_for_documents', 'waiting_skill_check', 'member'] %}
-<a href="{{ path('change_status', {'status': status}) }}" class="btn btn-secondary">{{status}}</a>
-{% endfor %}
-{% endif %}
-
-<div>
-  <ul>
-    {% for status, count in repartition %}
-    <li>
-      <div>{{status|trans}}:</div>
-      <div>{{count}}</div>
-    </li>
-    {% endfor %}
-  </ul>
-</div>
+    <div>
+        <ul>
+            {% for status, count in repartition %}
+                <li>
+                    <div>{{status|trans}}:</div>
+                    <div>{{count}}</div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 
 
 {% endblock %}

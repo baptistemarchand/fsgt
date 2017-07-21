@@ -1,0 +1,13 @@
+{% if club.status == 'lottery_closed' %}
+    <p>Bienvenue et merci de ton intérêt pour notre club !
+        Quand les inscriptions ouvrirons tu recevras un mail pour participer au tirage au sort.</p>
+{% else %}
+    <p>Le tirage au sort est ouvert !</p>
+    {% if user.basic_info_filled %}
+        <a href="{{ path('change_status', {'status': 'in_lottery'}) }}">
+            <button class="btn btn-success btn-lg">Participer</button>
+        </a>
+    {% else %}
+        <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Edite ton profile pour pouvoir t'inscrire</a>
+    {% endif %}
+{% endif %}

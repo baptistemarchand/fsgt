@@ -1,37 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-
-<div class="container alert alert-info" style="width:500px; margin-top: 50px">
-{% block content %}
-
-{% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-{% endif %}
-
-<form action="{{ path("fos_user_security_check") }}" method="post">
-    {% if csrf_token %}
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
-    {% endif %}
-        <div class="form-group">
-          <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" placeholder="email" class="form-control"/>
-        </div>
-        <div class="form-group">
-          <input type="password" id="password" name="_password" required="required" placeholder="mot de passe" class="form-control"/>
-        </div>
-
-<!--    <input type="checkbox" id="remember_me" name="_remember_me" value="on" /> -->
-<!--    <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label> -->
-<div class="form-group">
-  <input type="submit" id="_submit" name="_submit" value="Connexion" class="btn btn-primary"/>
-</div>
-</form>
-
-<div>
-  <a href="{{path('fos_user_registration_register')}}">Pas encore inscrit ?</a>
-</div>
-
-
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+     body {
+         padding-top: 50px;
+         padding-bottom: 50px;
+         background-color: #eee;
+     }
+    </style>
 {% endblock %}
-</div>
+
+{% block body %}
+    
+    <div class="container">
+        
+        {% if error %}
+            <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+        
+        <form class="form-signin" action="{{ path("fos_user_security_check") }}" method="post">
+            
+            <h3 class="form-signin-heading">Les Trois Mousquetons</h3>
+            
+            {% if csrf_token %}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+            {% endif %}
+            <div class="form-group">
+                <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" placeholder="email" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="_password" required="required" placeholder="mot de passe" class="form-control"/>
+            </div>
+
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="_remember_me" value="on"/> Se souvenir de moi
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" id="_submit" name="_submit" value="Connexion" class="btn btn-primary btn-lg btn-block"/>
+            </div>
+            <a href="{{path('fos_user_registration_register')}}" id="">S'inscrire</a>
+            <a href="{{ path('fos_user_resetting_request') }}">Mot de passe oublié</a>
+        </form>
+
+    </div>
 {% endblock %}
