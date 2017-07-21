@@ -1,121 +1,118 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
-{% block body %}
-    <div id="wrapper">
-        <div id="container">
-          <h2>Salut {{user.first_name}} !</h2>
+{% block content %}
+<div class="jumbotron">
 
-          {% if is_granted('ROLE_ADMIN') %}
-          <a href="{{ path('admin_panel', {id: 1}) }}" class="">admin</a> | 
+  <h3>Salut{{' ' ~user.first_name}},</h3>
+  
+  {% if user.status == 'member' %}
+  <h1 class="display-4">Tu es membre des Trois Mousquetons. Bonne grimpe !</h1>
+  {% else %}
+  <p class="lead">Voici le status de ton inscription:</p>
+  
+  <div class="card text-center">
+
+    <div class="card-block">
+
+      <h4 class="card-title">{{user.status|trans}}</h4>
+      
+      {% if user.status == 'new' %}
+      
+        {% if club.status == 'lottery_closed' %}
+          <p>Bienvenue et merci de ton intérêt pour notre club !
+            Quand les inscriptions ouvrirons tu recevras un mail pour participer au tirage au sort.</p>
+        {% else %}
+          <p>Le tirage au sort est ouvert !</p>
+          {% if user.basic_info_filled %}
+            <a href="{{ path('change_status', {'status': 'in_lottery'}) }}">
+              <button class="btn btn-success btn-lg">Participer</button>
+            </a>
+          {% else %}
+            <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Edite ton profile pour pouvoir t'inscrire</a>
           {% endif %}
-          <a href="{{ path('edit_user') }}" class="">editer son profil</a>
-          
-          <div class="alert alert-info">
+        {% endif %}
+      
+      {% elseif user.status == 'in_lottery' %}
             
-            {% if user.status == 'new' %}
-                {% if club.status == 'lottery_closed' %}
-                    <p>Bienvenue et merci de ton intérêt pour notre club !</p>
-                    <p>Quand les inscriptions ouvrirons tu recevras un mail pour participer au tirage au sort.</p>
+        <p>Tu sera averti(e) par mail quand nous aurons les résultats.</p>
+      
+      {% elseif user.status == 'waiting_for_documents' %}
+        
+        <p>Les choses qu'il te reste à faire:</p>
+        <div class="card-group">
+        
+        {% if not user.medicalCertificateName %}
+            <div class="card">
+              <div class="card-block">
+                <h4 class="card-title">Uploader ton certificat médical</h4>
+                <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Mon profile</a>
+              </div>
+            </div>
+        {% endif %}
+        
+        {% if user.payment_status != 'paid' %}
+            <div class="card">
+              <div class="card-block">
+                <h4 class="card-title">Payer la cotisation</h4>
+                
+                {% if user.payment_status == 'processing' %}
+                  <p class="lead">Ton paiement est en cours.</p>
                 {% else %}
-                    <p>Le tirage au sort est ouvert !</p>
-                    {% if user.basic_info_filled %}
-                        <a href="{{ path('change_status', {'status': 'in_lottery'}) }}">
-                          <button class="btn btn-primary">Participer</button>
-                        </a>
-                    {% else %}
-                        <a href="{{ path('edit_user') }}" class="btn btn-default">Edite ton profil</a> pour pouvoir t'inscrire.
-                        {% endif %}
+                
+                  {% if use_live_stripe %}
+                    <div class="alert alert-danger">!!!USING LIVE STRIPE!!!</div>
+                  {% endif %}
+                
+                  <form action="{{ path('stripe_charge') }}" method="post" id="payment-form">
+                    <div class="form-row">
+                      <div>
+                        <div id="card-element">
+                          <!-- a Stripe Element will be inserted here. -->
+                        </div>
+                        
+                        <button class="btn btn-lg btn-primary">Payer 80€</button>
+                      </div> <!-- -->
+                      <!-- Used to display Element errors -->
+                      <div id="card-errors" role="alert"></div>
+                    </div><!-- form-row -->
+                  </form>
                 {% endif %}
+              </div> <!-- card-block -->
+            </div> <!-- card -->
+        {% endif %}
+        </div> <!-- card-group -->
+        
+      {% elseif user.status == 'in_waiting_list' %}
+      <p>Tu es dans notre liste d'attente et tu recevra un mail au prochaines inscriptions</p>
+      
+      {% elseif user.status == 'waiting_skill_check' %}
+      <p>Ton paiement a été validé. Tu y es presque !
+        Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.
+        Une fois validé(e) tu sera officiellement membre des Trois Mousquetons !</p>
+      
+      {% endif %}
 
-            {% elseif user.status == 'in_lottery' %}
-            <p>Tu es inscrit(e) au tirage au sort.</p>
-            <p>Tu sera averti(e) par mail quand nous aurons les résultats</p>
+    </div> <!-- card-block -->
+  </div> <!-- card -->
+  {% endif %}
+</div> <!-- jumbo -->
 
-            {% elseif user.status == 'waiting_for_documents' %}
-            <p>Les choses qu'il te reste à faire:</p>
-            {% if not user.medicalCertificateName %}
-            <a href="{{ path('edit_user') }}" class="btn btn-primary">uploader ton certificat médical</a></p>
-            {% endif %}
-            {% if user.payment_status == 'processing' %}
-            Ton paiement est en cours.
-            {% elseif user.payment_status != 'paid' %}
-
-{% if use_live_stripe %}
-<div class="alert alert-danger">!!!USING LIVE STRIPE!!!</div>
+{% if is_granted('ROLE_ADMIN') %}
+{% for status in ['new', 'in_lottery', 'in_waiting_list', 'waiting_for_documents', 'waiting_skill_check', 'member'] %}
+<a href="{{ path('change_status', {'status': status}) }}" class="btn btn-secondary">{{status}}</a>
+{% endfor %}
 {% endif %}
 
-            <form action="{{ path('stripe_charge') }}" method="post" id="payment-form" style="margin-top:20px">
-              <div class="form-row">
-                <label for="card-element">
-                  Payer ta cotisation
-                </label>
-                <div style="height:50px">
-                  <div id="card-element" style="float:left; width:500px;margin-right:50px" >
-                    <!-- a Stripe Element will be inserted here. -->
-                  </div>
-                  
-                  <button style="float:left" class="btn btn-primary">Payer 80€</button>
-                </div>
-                
-                <!-- Used to display Element errors -->
-                <div id="card-errors" role="alert"></div>
-              </div>
-            </form>
-            {% endif %}
+<div>
+  <ul>
+    {% for status, count in repartition %}
+    <li>
+      <div>{{status|trans}}:</div>
+      <div>{{count}}</div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 
-            {% elseif user.status == 'in_waiting_list' %}
-            <p>Tu es dans notre liste d'attente et tu recevra un mail au prochaines inscriptions</p>
-            
-            {% elseif user.status == 'waiting_skill_check' %}
-            <p>Ton paiement a été validé. Tu y es presque !</p>
-            <p>Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.</p>
-            <p>Une fois validé(e) tu sera officiellement membre des Trois Mousquetons !</p>
-            
-            {% elseif user.status == 'member' %}
-            <p>Tu es membre des Trois Mousquetons. Bonne grimpe !</p>
-            
-            {% else %}
-            <p>Status: {{user.status}}</p>
-            {% endif %}
 
-          </div>
-
-          {% if is_granted('ROLE_ADMIN') %}
-          {% for status in ['new', 'in_lottery', 'in_waiting_list', 'waiting_for_documents', 'waiting_skill_check', 'member'] %}
-          <a href="{{ path('change_status', {'status': status}) }}" class="btn btn-default">{{status}}<a>
-          {% endfor %}
-          {% endif %}
-          
-        </div>
-        
-    </div>
-{% endblock %}
-
-{% block stylesheets %}
-<style>
-    body { background: #F5F5F5; font: 18px/1.5 sans-serif; }
-    h1, h2 { line-height: 1.2; margin: 0 0 .5em; }
-    h1 { font-size: 36px; }
-    h2 { font-size: 21px; margin-bottom: 1em; }
-    p { margin: 0 0 1em 0; }
-    a { color: #0000F0; }
-    a:hover { text-decoration: none; }
-    code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break-word; }
-    #wrapper { background: #FFF; margin: 1em auto; max-width: 800px; width: 95%; }
-    #container { padding: 2em; }
-    #welcome, #user.status { margin-bottom: 2em; }
-    #welcome h1 span { display: block; font-size: 75%; }
-    #icon-user.status, #icon-book { float: left; height: 64px; margin-right: 1em; margin-top: -4px; width: 64px; }
-    #icon-book { display: none; }
-
-    @media (min-width: 768px) {
-        #wrapper { width: 80%; margin: 2em auto; }
-        #icon-book { display: inline-block; }
-        #user.status a, #next a { display: block; }
-
-        @-webkit-keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
-        @keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
-        .sf-toolbar { opacity: 0; -webkit-animation: fade-in 1s .2s forwards; animation: fade-in 1s .2s forwards;}
-    }
-</style>
 {% endblock %}

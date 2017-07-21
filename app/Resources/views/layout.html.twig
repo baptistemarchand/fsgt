@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="container">
+
+  <div class="header clearfix">
+    <nav>
+      <ul class="nav nav-pills float-right">
+        {% if is_granted('ROLE_ADMIN') %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ path('admin_panel', {id: 1}) }}">admin</a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ path('edit_user') }}">editer son profil</a>
+        </li>
+      </ul>
+    </nav>
+<!--    <h3 class="text-muted">FSGT</h3> -->
+  </div>
+  
+  {% block content%}{% endblock %}
+
+</div> <!-- /container -->
+
+{% endblock %}
