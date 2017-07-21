@@ -158,6 +158,10 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     public $payment_status;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    public $last_year_medical_certificate;
 
     public function setEmail($email)
     {

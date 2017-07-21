@@ -119,6 +119,47 @@ class ClubController extends Controller
     }
 
     /**
+     * @Route("/{id}/re_registration", name="re_registration")
+     */
+    public function reRegistrationAction(Club $club)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
+        
+        $em = $this->get('doctrine')->getManager();
+        $users = $em->getRepository(User::class)->findByStatus(['member']);
+
+        foreach($users as $user)
+        {
+            $user->status = 'waiting_for_documents';
+            $user->payment_status = null;
+            $user->last_year_medical_certificate = $user->getMedicalCertificateName();
+            $user->setMedicalCertificateName(null);
+            $em->persist($user);
+        }
+
+        $em->flush();
+
+        
+        $userEmails = array_map(function ($user) {
+            return $user->getEmail();
+        }, $users);
+        
+        $message = (new \Swift_Message('Les Trois Mousquetons - Ré-inscriptions'))
+                 ->setFrom('contact@troismousquetons.com')
+                 ->setBcc($userEmails)
+                 ->setBody(
+                     $this->renderView('email/re_registration.html.twig'),
+                     'text/html'
+                 );
+
+        $this->get('mailer')->send($message);
+
+        return $this->redirectToRoute('admin_panel', [
+            'id' => $club->id,
+        ]);
+    }
+
+    /**
      * @Route("/{id}/test_lottery", name="test_lottery")
      */
     public function testLotteryAction(Club $club)
