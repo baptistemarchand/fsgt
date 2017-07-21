@@ -1,7 +1,18 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+     body {
+         padding-top: 50px;
+         padding-bottom: 50px;
+         background-color: #eee;
+     }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <div class="container alert alert-danger" style="width:500px; margin-top: 50px">
+    <div class="container">
         {% block fos_user_content %}{% endblock %}
     </div>
 {% endblock %}

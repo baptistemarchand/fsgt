@@ -38,22 +38,23 @@
         
     </div> <!-- jumbo -->
 
+
+    <div class="progress">
+        <div class="progress-bar bg-info progress-status">inscrits à la newsletter<div class="status-count">{{repartition['new']}}</div></div>
+        <div class="progress-bar bg-primary progress-status">inscrits au tirage au sort<div class="status-count">{{repartition['in_lottery']}}</div></div>
+        <div class="progress-bar bg-warning progress-status">en attente de paiement + certificat<div class="status-count">{{repartition['waiting_for_documents']}}</div></div>
+        <div class="progress-bar bg-danger progress-status">en attente de validation<div class="status-count">{{repartition['waiting_skill_check']}}</div></div>
+        <div class="progress-bar bg-success progress-status">membres<div class="status-count">{{repartition['member']}}</div></div>
+    </div>
+
     {% if is_granted('ROLE_ADMIN') %}
-        {% for status in ['new', 'in_lottery', 'in_waiting_list', 'waiting_for_documents', 'waiting_skill_check', 'member'] %}
-            <a href="{{ path('change_status', {'status': status}) }}" class="btn btn-secondary">{{status}}</a>
-        {% endfor %}
+        <div class="alert" style="margin-top:50px">
+            {% for status in ['new', 'in_lottery', 'in_waiting_list', 'waiting_for_documents', 'waiting_skill_check', 'member'] %}
+                <a href="{{ path('change_status', {'status': status}) }}" class="btn btn-secondary">{{status}}</a>
+            {% endfor %}
+        </div>
     {% endif %}
 
-    <div>
-        <ul>
-            {% for status, count in repartition %}
-                <li>
-                    <div>{{status|trans}}:</div>
-                    <div>{{count}}</div>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
 
 
 {% endblock %}

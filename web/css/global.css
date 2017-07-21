@@ -54,5 +54,15 @@
 }
 .form-signin a {
     color: #999;
-    padding: 20px;
+    padding-right: 20px;
+}
+
+.progress-status {
+    width: 20%;
+    height: 60px;
+}
+
+.status-count {
+    font-size: 40px;
+    margin-top: 12px;
 }

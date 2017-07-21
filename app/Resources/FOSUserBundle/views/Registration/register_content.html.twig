@@ -1,15 +1,21 @@
-{% trans_default_domain 'FOSUserBundle' %}
-<h1>S'inscrire aux Trois Mousquetons</h1>
-{{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
+{% block fos_user_content %}
 
-{{ form_widget(form)}}
-
-<div>
-  <input class="btn btn-primary" type="submit" value="S'inscrire" />
-</div>
-
-{{ form_end(form) }}
-
-<div style="margin-top:50px">
-  Déjà inscrit ? <a href="{{path('fos_user_security_login')}}">Se connecter</a>
-</div>
+    <div class="form-signin">
+    
+        <h1>S'inscrire</h1>
+        
+        {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
+        
+        {{ form_widget(form) }}
+        
+        <div>
+            <input class="btn btn-lg btn-block btn-primary" type="submit" value="S'inscrire" />
+        </div>
+        
+        {{ form_end(form) }}
+        
+        <a href="{{path('fos_user_security_login')}}">Se connecter</a>
+        
+    </div>
+    
+{% endblock %}

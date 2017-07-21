@@ -1,104 +1,73 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div id="wrapper">
-  <div id="container">
-    <a href="{{path('homepage')}}"><h2>{{club.name}}</h2></a>
+    <div class="container">
+        <a href="{{path('homepage')}}"><h2>{{club.name}}</h2></a>
 
-    <div class="alert">
-      <p>Status: {{club.status}}</p>
-      <p>Nombre de membres tirés au sort: {{club.maxWinners}}</p>
-    </div>
-    
-    <div class="alert">
-      <a href="{{path('open_lottery', {id: club.id})}}"><button class="btn btn-primary">Ouvrir le tirage au sort</button></a>
-      <a href="{{path('test_lottery', {id: club.id})}}"><button class="btn btn-primary" {% if not users_in_lottery %} disabled {% endif %}>Tester le tirage au sort</button></a>
-      <a href="{{path('finish_lottery', {id: club.id})}}"><button class="btn btn-primary" {% if not lottery_ready %} disabled {% endif %}>Valider le tirage au sort</button></a>
-      <a href="{{path('re_registration', {id: club.id})}}"><button class="btn btn-primary">Lancer les réinscriptions</button></a>
-    </div>
-          
-    <table class="table table-hover table-bordered table-sm">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Email</th>
-          <th>Status</th>
-          <th>Validation</th>
-          <th>Certificat Médical</th>
-          <th>Paiement</th>
-          <th>Activé</th>
-          <th>Reset</th>
-        </tr>
-      </thead>
-      {% for user in users %}
-      <tr>
-        <td>
-          {{ user.first_name }} {{ user.last_name }}
-        </td>
-        <td>
-          {{ user.email }}
-        </td>
-        <td class="{% if user.status == 'in_lottery' %}{{ ('bootstrap.' ~ user.temporary_lottery_status) | trans }}{%else%}{{ ('bootstrap.' ~ user.status) | trans }}{%endif%}">
-          {{ user.status | trans }}
-        </td>
-        <td>
-          {% if user.skill_checked %}
-          Validé(e)
-          {% else %}
-          <a href="{{path('set_skill_checked', {id: club.id, user_id: user.id})}}">
-            <button class="btn btn-success" style="width: 100%;">Marquer comme Validé(e)</button>
-          </a>
-          {% endif %}
-        </td>
-        <td>
-          {% if user.medicalCertificateName %}
-          <a href="{{ vich_uploader_asset(user, 'medicalCertificateFile') }}">à jour</a>
-          {% endif %}
-        </td>
-        <td>
-          {{user.payment_status}}
-         </td>
-        <td>
-          {{ user.enabled ? 'Oui' : 'Non' }}
-        </td>
-        <td>
-          <a href="{{path('reset_user', {id: club.id, user_id: user.id})}}">
-            <button class="btn" style="width: 100%;">Reset</button>
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
+        <div class="alert">
+            <p>Status: {{club.status}}</p>
+            <p>Nombre de membres tirés au sort: {{club.maxWinners}}</p>
+        </div>
         
-</div>
-{% endblock %}
-
-{% block stylesheets %}
-<style>
-    body { background: #F5F5F5; font: 18px/1.5 sans-serif; }
-    h1, h2 { line-height: 1.2; margin: 0 0 .5em; }
-    h1 { font-size: 36px; }
-    h2 { font-size: 21px; margin-bottom: 1em; }
-    p { margin: 0 0 1em 0; }
-    a { color: #0000F0; }
-    a:hover { text-decoration: none; }
-    code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break-word; }
-    #wrapper { background: #FFF; margin: 1em auto; max-width: 1200px; width: 95%; }
-    #container { padding: 2em; }
-    #welcome, #user.status { margin-bottom: 2em; }
-    #welcome h1 span { display: block; font-size: 75%; }
-    #icon-user.status, #icon-book { float: left; height: 64px; margin-right: 1em; margin-top: -4px; width: 64px; }
-    #icon-book { display: none; }
-
-    @media (min-width: 768px) {
-        #wrapper { width: 80%; margin: 2em auto; }
-        #icon-book { display: inline-block; }
-        #user.status a, #next a { display: block; }
-
-        @-webkit-keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
-        @keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
-        .sf-toolbar { opacity: 0; -webkit-animation: fade-in 1s .2s forwards; animation: fade-in 1s .2s forwards;}
-    }
-</style>
+        <div class="alert">
+            <a href="{{path('open_lottery', {id: club.id})}}"><button class="btn btn-primary">Ouvrir le tirage au sort</button></a>
+            <a href="{{path('test_lottery', {id: club.id})}}"><button class="btn btn-primary" {% if not users_in_lottery %} disabled {% endif %}>Tester le tirage au sort</button></a>
+            <a href="{{path('finish_lottery', {id: club.id})}}"><button class="btn btn-primary" {% if not lottery_ready %} disabled {% endif %}>Valider le tirage au sort</button></a>
+            <a href="{{path('re_registration', {id: club.id})}}"><button class="btn btn-primary">Lancer les réinscriptions</button></a>
+        </div>
+        
+        <table class="table table-hover table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Validation</th>
+                    <th>Certificat Médical</th>
+                    <th>Paiement</th>
+                    <th>Activé</th>
+                    <th>Reset</th>
+                </tr>
+            </thead>
+            {% for user in users %}
+                <tr>
+                    <td>
+                        {{ user.first_name }} {{ user.last_name }}
+                    </td>
+                    <td>
+                        {{ user.email }}
+                    </td>
+                    <td class="{% if user.status == 'in_lottery' %}{{ ('bootstrap.' ~ user.temporary_lottery_status) | trans }}{%else%}{{ ('bootstrap.' ~ user.status) | trans }}{%endif%}">
+                        {{ user.status | trans }}
+                    </td>
+                    <td>
+                        {% if user.skill_checked %}
+                            Validé(e)
+                        {% else %}
+                            <a href="{{path('set_skill_checked', {id: club.id, user_id: user.id})}}">
+                                <button class="btn btn-success" style="width: 100%;">Marquer comme Validé(e)</button>
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.medicalCertificateName %}
+                            <a href="{{ vich_uploader_asset(user, 'medicalCertificateFile') }}">à jour</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{user.payment_status}}
+                    </td>
+                    <td>
+                        {{ user.enabled ? 'Oui' : 'Non' }}
+                    </td>
+                    <td>
+                        <a href="{{path('reset_user', {id: club.id, user_id: user.id})}}">
+                            <button class="btn" style="width: 100%;">Reset</button>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        
+    </div>
 {% endblock %}
