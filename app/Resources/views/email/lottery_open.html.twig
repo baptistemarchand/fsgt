@@ -1,5 +1,12 @@
-Bonjour !
+{% extends 'email/layout.html.twig' %}
 
-Les inscriptions sont ouvertes !
-<!--<a href="bap.ovh{{path('change_status', {status: 'in_lottery'})}}">Clique sur ce lien</a> pour participer au tirage au sort.-->
+{% block email_content %}
+
+<p>Bonjour !</p>
+
+<p>Les inscriptions sont ouvertes !</p>
+<p>
 <a href="bap.ovh{{path('edit_user')}}">Clique sur ce lien</a> pour remplir le formulaire d'inscription.
+</p>
+
+{% endblock %}
