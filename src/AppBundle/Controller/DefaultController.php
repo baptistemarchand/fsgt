@@ -38,7 +38,7 @@ class DefaultController extends Controller
 
         \Stripe\Stripe::setApiKey($this->getParameter($use_live_stripe ? 'stripe_live_token' : 'stripe_test_token'));
         $charge = \Stripe\Charge::create([
-            'amount' => 0.5 * 100,
+            'amount' => 0.5 * 100, // FIXME
             'currency' => 'eur',
             'source' => $token
         ]);
@@ -103,6 +103,17 @@ class DefaultController extends Controller
 
         $em->persist($user);
         $em->flush();
+
+        $message = (new \Swift_Message('Les Trois Mousquetons - Paiement validé'))
+                 ->setFrom('contact@troismousquetons.com')
+                 ->setBcc($user->getEmail())
+                 ->setBody(
+                     $this->renderView('email/charge_succeeded.html.twig'),
+                     'text/html'
+                 );
+        
+        $this->get('mailer')->send($message);
+
         
         return $this->json([
             'success' => true,
