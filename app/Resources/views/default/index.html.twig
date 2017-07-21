@@ -3,7 +3,7 @@
 {% block body %}
     <div id="wrapper">
         <div id="container">
-          <h2>[{{club.shortName}}] Salut {{user.first_name}} !</h2>
+          <h2>Salut {{user.first_name}} !</h2>
 
           {% if is_granted('ROLE_ADMIN') %}
           <a href="{{ path('admin_panel', {id: 1}) }}" class="">admin</a> | 

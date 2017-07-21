@@ -17,6 +17,14 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         $user = $this->getUser();
+
+        if ($user->payment_status === 'paid' && $user->getMedicalCertificateName())
+        {
+            $user->status = $user->skill_checked ? 'member' : 'waiting_skill_check';
+            $em = $this->get('doctrine')->getManager();
+            $em->persist($user);
+            $em->flush();
+        }
         
         return $this->render('default/index.html.twig', [
             'user' => $user,
