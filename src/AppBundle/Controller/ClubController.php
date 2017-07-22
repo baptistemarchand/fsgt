@@ -38,7 +38,7 @@ class ClubController extends Controller
             'users' => $users,
             'club' => $club,
             'users_in_lottery' => !!count($users_in_lottery),
-            'lottery_ready' => !count(array_filter($users_in_lottery, function($user) {
+            'lottery_ready' => $users_in_lottery && !count(array_filter($users_in_lottery, function($user) {
                 return $user->temporary_lottery_status === null;
             })),
         ]);
@@ -152,7 +152,8 @@ class ClubController extends Controller
                      'text/html'
                  );
 
-        $this->get('mailer')->send($message);
+        if ($userEmails)
+            $this->get('mailer')->send($message);
 
         return $this->redirectToRoute('admin_panel', [
             'id' => $club->id,

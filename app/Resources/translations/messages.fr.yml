@@ -6,6 +6,9 @@ waiting_skill_check: En attente de validation
 member: Membre
 
 
+lottery_open: Inscriptions ouvertes
+lottery_closed: Inscriptions fermées
+
 bootstrap:
   selected: success
   won_lottery: success

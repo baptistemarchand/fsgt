@@ -5,8 +5,8 @@
         <a href="{{path('homepage')}}"><h2>{{club.name}}</h2></a>
 
         <div class="alert">
-            <p>Status: {{club.status}}</p>
-            <p>Nombre de membres tirés au sort: {{club.maxWinners}}</p>
+            <button disabled class="btn btn-outline-{% if club.status == 'lottery_open' %}success{%else%}danger{%endif%}">{{club.status|trans}}</button>
+            <p>Lors du tirage au sort, {{club.maxWinners}} personnes seront sélectionnées</p>
         </div>
         
         <div class="alert">
