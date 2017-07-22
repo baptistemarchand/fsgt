@@ -26,6 +26,14 @@ class DefaultController extends Controller
             $em->flush();
         }
 
+        if ($user->basic_info_filled !== $user->basicInfoFilled())
+        {
+            $em = $this->get('doctrine')->getManager();
+            $user->basic_info_filled = $user->basicInfoFilled();
+            $em->persist($user);
+            $em->flush();
+        }
+
         $em = $this->get('doctrine')->getManager();
         $users = $em->getRepository(User::class)->findAll();
         $repartition = [
