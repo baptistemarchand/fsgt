@@ -11,8 +11,18 @@ lottery_closed: Inscriptions fermées
 
 bootstrap:
   selected: success
-  won_lottery: success
   not_selected: danger
   in_waiting_list: warning
   member: info
+  new: none
+  waiting_skill_check: none
+  waiting_for_documents: none
   
+Gender: Sexe
+'First name': Prénom
+'Last name': Nom
+Birthday: Date de naissance
+Address: Adresse
+City: Ville
+'Zip code': Code postal
+'Does not need training': "Je sais grimper et assurer en tête"

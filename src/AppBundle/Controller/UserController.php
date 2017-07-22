@@ -81,9 +81,15 @@ class UserController extends Controller
               ])
               ->add('address', null, [
                   'label' => 'Adresse',
+                  'required' => true,
+              ])
+              ->add('city', null, [
+                  'label' => 'Ville',
+                  'required' => true,
               ])
               ->add('zip_code', null, [
                   'label' => 'Code Postal',
+                  'required' => true,
               ])
               ->add('phone_number', null, [
                   'label' => 'Téléphone',

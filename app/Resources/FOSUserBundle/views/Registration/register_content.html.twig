@@ -1,20 +1,81 @@
 {% block fos_user_content %}
 
-    <div class="form-signin">
+    <div class="container" style="max-width: 600px">
     
         <h1>S'inscrire</h1>
         
         {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
-        
-        {{ form_widget(form) }}
-        
-        <div>
-            <input class="btn btn-lg btn-block btn-primary" type="submit" value="S'inscrire" />
+
+        {{ form_row(form.email) }}
+
+        <div class="row form-group">
+            <div class="col">
+                {{ form_label (form.plainPassword.first)}}
+                {{ form_errors(form.plainPassword.first)}}
+                {{ form_widget(form.plainPassword.first)}}
+            </div>
+            <div class="col">
+                {{ form_label (form.plainPassword.second)}}
+                {{ form_errors(form.plainPassword.second)}}
+                {{ form_widget(form.plainPassword.second)}}
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col">
+                {{ form_label(form.first_name)}}
+                {{ form_errors(form.first_name)}}
+                {{ form_widget(form.first_name)}}
+            </div>
+            <div class="col">
+                {{ form_label(form.last_name)}}
+                {{ form_errors(form.last_name)}}
+                {{ form_widget(form.last_name)}}
+            </div>
         </div>
         
+        <div class="row form-group">
+            <div class="col">
+                {{ form_label (form.birthday)}}
+                {{ form_errors(form.birthday)}}
+                {{ form_widget(form.birthday)}}
+            </div>
+            <div class="col">
+                {{ form_label (form.gender)}}
+                {{ form_errors(form.gender)}}
+                {{ form_widget(form.gender)}}
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col">
+                {{ form_label (form.address)}}
+                {{ form_errors(form.address)}}
+                {{ form_widget(form.address)}}
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-8">
+                {{ form_label (form.city)}}
+                {{ form_errors(form.city)}}
+                {{ form_widget(form.city)}}
+            </div>
+            <div class="col-4">
+                {{ form_label (form.zip_code)}}
+                {{ form_errors(form.zip_code)}}
+                {{ form_widget(form.zip_code)}}
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
+        
+        <div>
+            <input class="btn btn-lg btn-primary btn-block" type="submit" value="S'inscrire" />
+        </div>
+
         {{ form_end(form) }}
         
-        <a href="{{path('fos_user_security_login')}}">Se connecter</a>
+        <a href="{{path('homepage')}}">Déjà inscrit ?</a>
         
     </div>
     

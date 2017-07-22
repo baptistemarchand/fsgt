@@ -88,6 +88,9 @@ class User extends BaseUser
             && $this->birthday
             && $this->email
             && $this->gender
+            && $this->address
+            && $this->city
+            && $this->zip_code
         ;
     }
 
@@ -130,6 +133,10 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     public $zip_code;    
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    public $city;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
