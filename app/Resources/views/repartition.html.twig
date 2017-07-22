@@ -1,0 +1,9 @@
+<h4>Répartition actuelle des candidats</h4>
+    
+<div class="progress">
+    <div class="progress-bar bg-info progress-status">inscrits à la newsletter<div class="status-count">{{repartition['new']}}</div></div>
+    <div class="progress-bar bg-primary progress-status">inscrits au tirage au sort<div class="status-count">{{repartition['in_lottery']}}</div></div>
+    <div class="progress-bar bg-warning progress-status">en attente de paiement + certificat<div class="status-count">{{repartition['waiting_for_documents']}}</div></div>
+    <div class="progress-bar bg-danger progress-status">en attente de validation<div class="status-count">{{repartition['waiting_skill_check']}}</div></div>
+    <div class="progress-bar bg-success progress-status">membres<div class="status-count">{{repartition['member']}}</div></div>
+</div>

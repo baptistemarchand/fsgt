@@ -19,6 +19,34 @@ use AppBundle\Entity\User;
 class ClubController extends Controller
 {
     /**
+     * @Route("/{id}/status", name="club_status")
+     */
+    public function statusAction(Club $club)
+    {
+        if ($this->getUser())
+            return $this->redirectToRoute('homepage');
+            
+        $em = $this->get('doctrine')->getManager();
+        $users = $em->getRepository(User::class)->findAll();
+        $repartition = [
+            'new' => 0,
+            'in_lottery' => 0,
+            'waiting_for_documents' => 0,
+            'waiting_skill_check' => 0,
+            'member' => 0,
+            'in_waiting_list' => 0,
+        ];
+
+        foreach ($users as $u)
+            $repartition[$u->status] += 1;
+       
+        return $this->render('club/status.html.twig', [
+             'club' => $club,
+             'repartition' => $repartition,
+        ]);
+    }
+
+    /**
      * @Route("/{id}/admin", name="admin_panel")
      */
     public function adminPanelAction(Club $club)

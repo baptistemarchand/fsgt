@@ -49,6 +49,7 @@ security:
             
     access_control:
         # require ROLE_ADMIN for /admin*
+        - { path: ^/club/[0-9]+/status$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/stripe/(live|test)$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }

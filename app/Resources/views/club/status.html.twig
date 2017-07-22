@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block body%}
+    <div class="container">
+        <div class="jumbotron" style="margin-top:50px">
+            <p class="lead">
+                {% if club.status == 'lottery_open' %}
+                    <h1>Les inscriptions sont ouvertes !</h1>
+                {% else %}
+                    <h1>Les inscriptions ne sont pas encore ouvertes.</h1>
+                    <h3>Ouverture prévue début Septembre.</h3>
+                    <p class="lead">Mais c'est pas grave ! Tu peux déjà créer un compte pour être averti quand les inscriptions seront ouvertes.</p>
+                {% endif %}
+                <a class="btn btn-lg btn-success" href="{{path('fos_user_registration_register')}}">crée un compte sur notre plateforme</a>
+                ou
+                <a class="btn btn-lg btn-primary" href="{{path('fos_user_security_login')}}">connecte toi</a>
+            </p>
+        </div>
+        
+        <div class="alert alert-info">
+            Il y a actuellement <strong>{{repartition['new']}}</strong> personnes inscrites à la newsletter
+            et <strong>{{repartition['in_waiting_list']}}</strong> personnes sur liste d'attente.
+            Soit <strong>{{repartition['new'] + repartition['in_waiting_list']}}</strong> personnes voulant potentiellement s'inscrire.
+        </div>
+
+        <div class="alert alert-warning">
+            <strong>Ce site est tout neuf !</strong> Il est donc possible (probable) que certaines choses ne fonctionnent pas comme prévu.
+            Si un problème survient envoie un email à baptistemarchand42@gmail.com.
+        </div>
+
+        <div>
+            <h2>Comment ça marche ?</h2>
+            
+            <p>Ce site est une plateforme de gestion en ligne et automatisée des inscriptions aux clubs d'escalade FSGT. Il est développé par le bureau des Trois Mousquetons.</p>
+            <p>Une inscription se passe en plusieurs étapes :</p>
+            
+            <h4>1. Inscription sur la plateforme</h4>
+            <p>Tu devras remplir un formulaire avec ton email pour que l'on puisse te contacter à l'ouverture du tirage au sort et un mot de passe pour que tu puisses te connecter à ton compte. Les autres champs (nom, adresse, etc) sont nécessaires à la création d'une license FSGT mais tu peux si tu le souhaites laisser ces champs vides pour le moment et les remplir plus tard.</p>
+
+            <h4>2. Ouverture du tirage au sort</h4>
+            <p>Deux fois par an (en général) nous ouvrons l'accès à un tirage au sort. Tu recevras un email pour te prévenir et tu n'auras qu'à cliquer sur un bouton pour participer. Il est nécessaire d'avoir rempli son profil (nom, adress, etc) pour pouvoir participer.</p>
+
+            <h4>3. Tirage au sort</h4>
+            <p>Quelques jours/semaines après l'ouverture, des gagnants sont tirés au sort. Les autres sont placés sur une list d'attente pour les prochaines inscriptions.</p>
+
+            <h4>4. Paiement et upload du certificat médical</h4>
+            <p>Si tu as été tiré au sort tu dois maintenant payer ta cotisation et uploader ton certifica médical. La plateforme permet de faire ces actions directement en ligne.</p>
+
+            <h4>5. Formation / Validation</h4>
+            <p>La dernière étape consiste à valider ton autonomie en éscalade, possiblement après une formation. Une fois validé tu recevras ta précieuse carte de membre et tu pourras grimper en toute autonomie !</p>
+
+</div>
+    </div>
+{% endblock %}
