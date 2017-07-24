@@ -13,10 +13,10 @@ bootstrap:
   selected: success
   not_selected: danger
   in_waiting_list: warning
-  member: info
+  member: success
   new: none
-  waiting_skill_check: none
-  waiting_for_documents: none
+  waiting_skill_check: danger
+  waiting_for_documents: info
   
 Gender: Sexe
 'First name': Prénom

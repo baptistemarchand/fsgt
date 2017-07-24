@@ -177,9 +177,7 @@ class ClubController extends Controller
         $message = (new \Swift_Message('Les Trois Mousquetons - Ré-inscriptions'))
                  ->setFrom('contact@troismousquetons.com')
                  ->setBcc($userEmails)
-                 ->setBody(
-                     $this->renderView('email/re_registration.txt.twig'),
-                 );
+                 ->setBody($this->renderView('email/re_registration.txt.twig'));
 
         if ($userEmails)
             $this->get('mailer')->send($message);
@@ -266,13 +264,13 @@ class ClubController extends Controller
                  ->setFrom('contact@troismousquetons.com')
                  ->setBcc($winnerEmails)
                  ->setBody(
-                     $this->renderView('email/lottery_winners.txt.twig'),
+                     $this->renderView('email/lottery_winners.txt.twig')
                  );
         $loserMessage = (new \Swift_Message('Résultats du tirage au sort'))
                  ->setFrom('contact@troismousquetons.com')
                  ->setBcc($loserEmails)
                  ->setBody(
-                     $this->renderView('email/lottery_losers.txt.twig'),
+                     $this->renderView('email/lottery_losers.txt.twig')
                  );
 
         if ($winnerEmails)
