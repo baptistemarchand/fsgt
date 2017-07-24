@@ -137,8 +137,11 @@ class ClubController extends Controller
                      'text/html'
                  );
 
-        $this->get('mailer')->send($message);
-
+        if (!$this->get('mailer')->send($message, $failures))
+            $this->get('logger')->critical('Some emails failed', [
+                'failures' => $failures,
+            ]);
+        
         $em->getRepository(Club::class)->openLottery();
 
         return $this->redirectToRoute('admin_panel', [
