@@ -133,8 +133,7 @@ class ClubController extends Controller
                  ->setFrom('contact@troismousquetons.com')
                  ->setBcc($userEmails)
                  ->setBody(
-                     $this->renderView('email/lottery_open.html.twig'),
-                     'text/html'
+                     $this->renderView('email/lottery_open.txt.twig')
                  );
 
         if (!$this->get('mailer')->send($message, $failures))
@@ -179,8 +178,7 @@ class ClubController extends Controller
                  ->setFrom('contact@troismousquetons.com')
                  ->setBcc($userEmails)
                  ->setBody(
-                     $this->renderView('email/re_registration.html.twig'),
-                     'text/html'
+                     $this->renderView('email/re_registration.txt.twig'),
                  );
 
         if ($userEmails)
@@ -268,15 +266,13 @@ class ClubController extends Controller
                  ->setFrom('contact@troismousquetons.com')
                  ->setBcc($winnerEmails)
                  ->setBody(
-                     $this->renderView('email/lottery_winners.html.twig'),
-                     'text/html'
+                     $this->renderView('email/lottery_winners.txt.twig'),
                  );
         $loserMessage = (new \Swift_Message('Résultats du tirage au sort'))
                  ->setFrom('contact@troismousquetons.com')
                  ->setBcc($loserEmails)
                  ->setBody(
-                     $this->renderView('email/lottery_losers.html.twig'),
-                     'text/html'
+                     $this->renderView('email/lottery_losers.txt.twig'),
                  );
 
         if ($winnerEmails)

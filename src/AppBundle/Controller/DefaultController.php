@@ -139,8 +139,7 @@ class DefaultController extends Controller
                  ->setFrom('contact@troismousquetons.com')
                  ->setBcc($user->getEmail())
                  ->setBody(
-                     $this->renderView('email/charge_succeeded.html.twig'),
-                     'text/html'
+                     $this->renderView('email/charge_succeeded.txt.twig'),
                  );
         
         $this->get('mailer')->send($message);
