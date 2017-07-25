@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 use AppBundle\Entity\Club;
 use AppBundle\Entity\User;
@@ -282,6 +283,47 @@ class ClubController extends Controller
         return $this->redirectToRoute('admin_panel', [
             'id' => $club->id,
         ]);
+    }
+
+    /**
+     * @Route("/{id}/export", name="club_export")
+     */
+    public function export(Club $club)
+    {
+        $em = $this->get('doctrine')->getManager();
+        $users = $em->getRepository(User::class)->findAll();
+
+        $formatedUsers = array_map(function ($user) {
+            return [
+                'last_name' => strtoupper($user->last_name),
+                'firt_name' => strtolower($user->first_name),
+                'birthday' => $user->birthday ? $user->birthday->format('d/m/y') : '',
+                'gender'    => $user->gender == 'male' ? 'M' : 'F',
+                'address'   => $user->address,
+                'address2'  => '',
+                'address3'  => '',
+                'zip_code'  => $user->zip_code,
+                'city'      => $user->city,
+                'insurance' => 'Oui',
+                'home_phone_number' => '',
+                'pro_phone_number' => '',
+                'phone_number' => $user->phone_number,
+                'email' => $user->getEmail(),
+                'licence_id' => $user->licence_id,
+                'licence_type' => 'OMNI',
+            ];
+        }, $users);
+
+        $out = fopen('php://output', 'w');
+        array_map(function ($user) use ($out) {
+            fputcsv($out, $user, ';');
+        }, $formatedUsers);
+        fclose($out);
+        
+        $response = new Response('');
+        $response->headers->set('Content-Type', 'text/csv');
+
+        return $response;
     }
 
 }
