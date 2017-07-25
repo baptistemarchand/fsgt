@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Exception;
+use DateTime;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -10,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use AppBundle\Entity\Club;
 use AppBundle\Entity\User;
 
@@ -296,7 +297,7 @@ class ClubController extends Controller
         $formatedUsers = array_map(function ($user) {
             return [
                 'last_name' => strtoupper($user->last_name),
-                'firt_name' => strtolower($user->first_name),
+                'first_name' => strtolower($user->first_name),
                 'birthday' => $user->birthday ? $user->birthday->format('d/m/y') : '',
                 'gender'    => $user->gender == 'male' ? 'M' : 'F',
                 'address'   => $user->address,
@@ -321,9 +322,88 @@ class ClubController extends Controller
         fclose($out);
         
         $response = new Response('');
-        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Type', 'text/plain');
 
         return $response;
+    }
+
+    /**
+     * @Route("/{id}/import", name="club_import")
+     */
+    public function import(Request $request, Club $club)
+    {
+        $form = $this->createFormBuilder()
+              ->add('submitFile', FileType::class, [
+                  'label' => 'Fichier au format FSGT'
+              ])
+              ->getForm();
+
+        $form->handleRequest($request);
+
+        $keys = [
+            'last_name',
+            'first_name',
+            'birthday',
+            'gender',
+            'address',
+            'address2',
+            'address3',
+            'zip_code',
+            'city',
+            'insurance',
+            'home_phone_number',
+            'pro_phone_number',
+            'phone_number',
+            'email',
+            'licence_id',
+            'licence_type',
+        ];
+        
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $file = $form->get('submitFile');
+            $data = $file->getData();
+            $users = array_map(function($line) {
+                return str_getcsv($line, ';');
+            }, file($data->getPathname()));
+
+            $em = $this->get('doctrine')->getManager();
+            foreach ($users as $user)
+            {
+                $user = array_combine($keys, $user);
+                $u = new User();
+                $u->setEmail($user['email']);
+                $u->first_name = $user['first_name'];
+                $u->last_name = $user['last_name'];
+                $u->birthday = new DateTime($user['birthday']);
+                $u->gender = $user['gender'];
+                $u->address = $user['address'];
+                $u->first_name = $user['first_name'];
+                $u->zip_code = $user['zip_code'];
+                $u->city = $user['city'];
+                $u->licence_id = $user['licence_id'];
+                $u->phone_number = $user['phone_number'];
+
+                $u->setPassword(base64_encode(random_bytes(16)));
+                
+                $em->persist($u);
+            }
+            $em->flush();
+            $em->clear();
+            
+            return $this->redirectToRoute('admin_panel', [
+                'id' => $club->id,
+            ]);
+
+        }
+
+        return $this->render(
+            'club/import.html.twig',
+            [
+                'form' => $form->createView(),
+                'club' => $club,
+            ]
+        );
     }
 
 }

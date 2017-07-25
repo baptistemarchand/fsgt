@@ -15,6 +15,7 @@
             <a href="{{path('finish_lottery', {id: club.id})}}"><button class="btn btn-primary" {% if not lottery_ready %} disabled {% endif %}>Valider le tirage au sort</button></a>
             <a href="{{path('re_registration', {id: club.id})}}"><button class="btn btn-primary">Lancer les réinscriptions</button></a>
             <a href="{{path('club_export', {id: club.id})}}" target="_blank"><button class="btn btn-secondary">Exporter au format FSGT</button></a>
+            <a href="{{path('club_import', {id: club.id})}}"><button class="btn btn-secondary">Importer au format FSGT</button></a>
         </div>
         
         <table class="table table-hover table-bordered table-sm">

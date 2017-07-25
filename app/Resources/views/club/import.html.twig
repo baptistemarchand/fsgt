@@ -1,0 +1,7 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    {{ form_start(form, {'method': 'post', 'action': path('club_import', {'id': club.id})}) }}
+    <input class="btn btn-primary" type="submit" value="Uploader" />
+    {{ form_end(form)}}
+{% endblock %}
