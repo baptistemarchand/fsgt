@@ -95,3 +95,7 @@ vich_uploader:
             uri_prefix: /medical_certificates
             upload_destination: '%kernel.project_dir%/web/medical_certificates'
             namer: vich_uploader.namer_uniqid
+        discount_document:
+            uri_prefix: /discount_documents
+            upload_destination: '%kernel.project_dir%/web/discount_documents'
+            namer: vich_uploader.namer_uniqid

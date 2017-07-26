@@ -102,6 +102,15 @@ class UserController extends Controller
                   'required' => false,
                   'allow_delete' => false,
               ])
+              ->add('has_discount', null, [
+                  'label' => 'J\'ai une réduction (étudiant,chômeur,RSA...)',
+                  'required' => false,
+              ])
+              ->add('discountDocumentFile', VichFileType::class, [
+                  'label' => 'Justificatif de tarif réduit (seulement si réduction)',
+                  'required' => false,
+                  'allow_delete' => false,
+              ])
               ->add('save', SubmitType::class, [
                   'label' => 'Enregistrer',
               ])

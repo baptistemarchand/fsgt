@@ -1,15 +1,24 @@
 <p>Les choses qu'il te reste à faire:</p>
 <div class="card-group">
     
-    {% if not user.medicalCertificateName %}
+    {% if not user.medicalCertificateName or not user.discountDocumentName %}
         <div class="card">
             <div class="card-block">
-                <h4 class="card-title">Uploader ton certificat médical</h4>
+                <h4 class="card-title">
+                    Ajouter ton 
+                    {% if not user.medicalCertificateName and not user.discountDocumentName %}
+                        certificat médical et ton justificatif de tarif réduit
+                    {% elseif not user.medicalCertificateName %}
+                        certificat médical
+                    {% elseif not user.discountDocumentName %}
+                        justificatif de tarif réduit
+                    {% endif %}
+                </h4>
                 <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Mon profil</a>
             </div>
         </div>
     {% endif %}
-    
+
     {% if user.payment_status != 'paid' %}
         <div class="card">
             <div class="card-block">
@@ -19,10 +28,6 @@
                     <p class="lead">Ton paiement est en cours.</p>
                 {% else %}
                     
-                    {% if use_live_stripe %}
-                        <div class="alert alert-danger">!!!USING LIVE STRIPE!!!</div>
-                    {% endif %}
-                    
                     <form action="{{ path('stripe_charge') }}" method="post" id="payment-form">
                         <div class="form-row">
                             <div>
@@ -30,7 +35,7 @@
                                     <!-- a Stripe Element will be inserted here. -->
                                 </div>
                                 
-                                <button class="btn btn-lg btn-primary">Payer 80€</button>
+                                <button class="btn btn-lg btn-primary">Payer {{user.has_discount ? '60' : '80'}}€</button>
                             </div> <!-- -->
                             <!-- Used to display Element errors -->
                             <div id="card-errors" role="alert"></div>

@@ -27,6 +27,7 @@
                     <th>Validation</th>
                     <th>Certificat Médical</th>
                     <th>Paiement</th>
+                    <th>Réduction</th>
                     <th>Activé</th>
                     <th>Reset</th>
                 </tr>
@@ -58,6 +59,15 @@
                     </td>
                     <td>
                         {{user.payment_status}}
+                    </td>
+                    <td>
+                        {% if user.has_discount %}
+                            {% if user.discountDocumentName %}
+                                <a href="{{ vich_uploader_asset(user, 'discountDocumentFile') }}">justificatif</a>
+                            {% else %}
+                                Pas de document
+                            {% endif %}
+                        {% endif %}
                     </td>
                     <td>
                         {{ user.enabled ? 'Oui' : 'Non' }}

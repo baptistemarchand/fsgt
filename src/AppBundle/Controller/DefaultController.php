@@ -67,14 +67,16 @@ class DefaultController extends Controller
         
         $use_live_stripe = $this->getParameter('use_live_stripe');
 
+        $user = $this->getUser();
+        
         \Stripe\Stripe::setApiKey($this->getParameter($use_live_stripe ? 'stripe_live_token' : 'stripe_test_token'));
         $charge = \Stripe\Charge::create([
-            'amount' => 0.5 * 100, // FIXME
+            'amount' => ($user->has_discount ? 60 : 80) * 100,
             'currency' => 'eur',
             'source' => $token
         ]);
 
-        $user = $this->getUser();
+
         $em = $this->get('doctrine')->getManager();
         $user->stripe_charge_id = $charge['id'];
         $user->payment_status = 'processing';
