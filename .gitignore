@@ -18,6 +18,8 @@
 node_modules
 *~
 \#*\#
-web/medical_certificates
+web/medical_certificates/*
+!web/medical_certificates/.gitkeep
+web/discount_documents/*
+!web/discount_documents/.gitkeep
 web/grimper-chez-les-voisins.js
-web/exports
