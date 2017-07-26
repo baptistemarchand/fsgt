@@ -19,7 +19,7 @@
                     {% if user.status == 'new' %}   
                         {% include 'status/new.html.twig' %}
                     {% elseif user.status == 'in_lottery' %}
-                        <p>Tu sera averti(e) par mail quand nous aurons les résultats.</p>
+                        <p>Tu seras averti(e) par mail quand nous aurons les résultats.</p>
                     {% elseif user.status == 'waiting_for_documents' %}
                         {% include 'status/waiting_for_documents.html.twig' %}
                     {% elseif user.status == 'in_waiting_list' %}
@@ -28,7 +28,7 @@
                         <p>
                             Ton paiement a été validé. Tu y es presque !
                             Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.
-                            Une fois validé(e) tu sera officiellement membre des Trois Mousquetons !
+                            Une fois validé(e) tu seras officiellement membre des Trois Mousquetons !
                         </p>
                     {% endif %}
 
