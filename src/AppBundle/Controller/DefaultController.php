@@ -18,7 +18,7 @@ class DefaultController extends Controller
     {
         $user = $this->getUser();
 
-        if ($user->status === 'waiting_for_documents' && $user->payment_status === 'paid' && $user->getMedicalCertificateName())
+        if ($user->status === 'waiting_for_documents' && $user->paidAndUploaded())
         {
             $user->status = $user->skill_checked ? 'member' : 'waiting_skill_check';
             $em = $this->get('doctrine')->getManager();

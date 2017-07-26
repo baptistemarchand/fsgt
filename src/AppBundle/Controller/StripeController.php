@@ -84,11 +84,11 @@ class StripeController extends Controller
         if ($user === null)
             throw new \Exception('No user found with this charge id.');
 
-        if ($user->getMedicalCertificateName())
-            $user->status = $user->skill_checked ? 'member' : 'waiting_skill_check';
-
         $user->payment_status = 'paid';
         
+        if ($user->paidAndUploaded())
+            $user->status = $user->skill_checked ? 'member' : 'waiting_skill_check';
+
         $em = $this->get('doctrine')->getManager();
 
         $em->persist($user);

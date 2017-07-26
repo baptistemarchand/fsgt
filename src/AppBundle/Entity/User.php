@@ -154,6 +154,14 @@ class User extends BaseUser
         ;
     }
 
+    public function paidAndUploaded()
+    {
+        return $this->getMedicalCertificateName()
+            && $this->payment_status === 'paid'
+            && (!$this->has_discount || $this->getDiscountDocumentName())
+        ;
+    }
+
     
     /**
      * @ORM\Id
