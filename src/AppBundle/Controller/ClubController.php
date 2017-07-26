@@ -310,8 +310,8 @@ class ClubController extends Controller
                 'pro_phone_number' => '',
                 'phone_number' => $user->phone_number,
                 'email' => $user->getEmail(),
-                'licence_id' => $user->licence_id,
-                'licence_type' => 'OMNI',
+                'license_id' => $user->license_id,
+                'license_type' => 'OMNI',
             ];
         }, $users);
 
@@ -355,8 +355,8 @@ class ClubController extends Controller
             'pro_phone_number',
             'phone_number',
             'email',
-            'licence_id',
-            'licence_type',
+            'license_id',
+            'license_type',
         ];
         
         if ($form->isSubmitted() && $form->isValid())
@@ -381,7 +381,7 @@ class ClubController extends Controller
                 $u->first_name = $user['first_name'];
                 $u->zip_code = $user['zip_code'];
                 $u->city = $user['city'];
-                $u->licence_id = $user['licence_id'];
+                $u->license_id = $user['license_id'];
                 $u->phone_number = $user['phone_number'];
 
                 $u->setPassword(base64_encode(random_bytes(16)));

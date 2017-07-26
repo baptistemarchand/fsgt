@@ -204,7 +204,7 @@ class User extends BaseUser
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    public $licence_id;
+    public $license_id;
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
