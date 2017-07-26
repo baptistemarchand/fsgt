@@ -10,21 +10,4 @@ namespace AppBundle\Repository;
  */
 class ClubRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function openLottery()
-    {
-        $em = $this->getEntityManager();
-        $club = $this->findOneByShortName('3mq');
-        $club->status = 'lottery_open';
-        $em->persist($club);
-        $em->flush();
-    }
-    
-    public function closeLottery()
-    {
-        $em = $this->getEntityManager();
-        $club = $this->findOneByShortName('3mq');
-        $club->status = 'lottery_closed';
-        $em->persist($club);
-        $em->flush();
-    }
 }

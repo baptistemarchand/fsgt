@@ -143,7 +143,9 @@ class ClubController extends Controller
                 'failures' => $failures,
             ]);
         
-        $em->getRepository(Club::class)->openLottery();
+        $club->status = 'lottery_open';
+        $em->persist();
+        $em->flush();
 
         return $this->redirectToRoute('admin_panel', [
             'id' => $club->id,
@@ -197,7 +199,9 @@ class ClubController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
         
         $em = $this->get('doctrine')->getManager();
-        $em->getRepository(Club::class)->closeLottery();
+        $club->status = 'lottery_closed';
+        $em->persist($club);
+        $em->flush();
 
         $users = $em->getRepository(User::class)->findByStatus('in_lottery');
 
