@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
  * Club
  *
  * @ORM\Table(name="club")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ClubRepository")
  */
 class Club
 {
