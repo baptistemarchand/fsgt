@@ -20,4 +20,7 @@ parameters:
 
     #stripe
     stripe_test_token: ~
-    stripe_endpoint_secret: ~
+    stripe_endpoint_secret_test: ~
+    stripe_endpoint_secret_live: ~
+    stripe_live_token: ~
+    use_live_stripe: ~
