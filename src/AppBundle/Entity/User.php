@@ -142,8 +142,7 @@ class User extends BaseUser
         return $this->discountDocumentName;
     }
 
-
-    public function basicInfoFilled()
+    public function basicInfoFilled(): bool
     {
         return $this->first_name
             && $this->last_name
@@ -156,7 +155,7 @@ class User extends BaseUser
         ;
     }
 
-    public function paidAndUploaded()
+    public function paidAndUploaded(): bool
     {
         return $this->getMedicalCertificateName()
             && $this->payment_status === 'paid'
@@ -202,7 +201,7 @@ class User extends BaseUser
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    public $zip_code;    
+    public $zip_code;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
