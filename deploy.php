@@ -9,8 +9,6 @@ set('repository', 'git@gitlab.com:baptistemarchand42/fsgt.git');
 set('git_tty', true); // [Optional] Allocate tty for git on first deployment
 add('shared_files', []);
 add('shared_dirs', [
-    'web/medical_certificates',
-    'web/discount_documents',
     'var/logs',
     'var/sessions',
 ]);
