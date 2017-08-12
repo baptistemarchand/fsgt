@@ -145,7 +145,7 @@ class ClubController extends Controller
             ]);
         
         $club->status = 'lottery_open';
-        $em->persist();
+        $em->persist($club);
         $em->flush();
 
         return $this->redirectToRoute('admin_panel', [
