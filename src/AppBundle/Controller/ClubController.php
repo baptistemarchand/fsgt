@@ -239,7 +239,10 @@ class ClubController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
         
         $em = $this->get('doctrine')->getManager();
-        $em->getRepository(Club::class)->closeLottery();
+        $club = $em->getRepository(Club::class)->findOneByShortName('3MQ');
+        $club->status = 'lottery_closed';
+        $em->persist($club);
+        $em->flush();
 
         $users = $em->getRepository(User::class)->findByStatus('in_lottery');
 
