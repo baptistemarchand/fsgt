@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd /srv/fsgt/site && \
-git reset --hard origin/HEAD && \
+git fetch && git reset --hard origin/HEAD && \
 cp /home/bap/fsgt/app/config/parameters.yml /srv/fsgt/site/app/config/parameters.yml && \
 cd /home/bap/fsgt && \
 docker-compose exec php-fpm composer install && \
