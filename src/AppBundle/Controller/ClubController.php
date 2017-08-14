@@ -383,7 +383,7 @@ class ClubController extends Controller
                 $u->setEmail($user['email']);
                 $u->first_name = $user['first_name'];
                 $u->last_name = $user['last_name'];
-                $u->birthday = new DateTime($user['birthday']);
+                $u->birthday = DateTime::createFromFormat('d/m/Y', $user['birthday']);
                 $u->gender = $user['gender'];
                 $u->address = $user['address'];
                 $u->first_name = $user['first_name'];
