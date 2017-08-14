@@ -379,11 +379,14 @@ class ClubController extends Controller
             foreach ($users as $user)
             {
                 $user = array_combine($keys, $user);
+                if ($em->getRepository(User::class)->findOneByEmail($user['email']))
+                    continue;
+
                 $u = new User();
                 $u->setEmail($user['email']);
                 $u->first_name = $user['first_name'];
                 $u->last_name = $user['last_name'];
-                $u->birthday = DateTime::createFromFormat('d/m/Y', $user['birthday']) ?: '';
+                $u->birthday = DateTime::createFromFormat('d/m/Y', $user['birthday']) ?: null;
                 $u->gender = $user['gender'];
                 $u->address = $user['address'];
                 $u->first_name = $user['first_name'];
