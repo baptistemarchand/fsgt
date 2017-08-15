@@ -23,3 +23,4 @@ web/medical_certificates/*
 web/discount_documents/*
 !web/discount_documents/.gitkeep
 web/grimper-chez-les-voisins.js
+.env
