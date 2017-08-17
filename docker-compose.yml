@@ -6,10 +6,8 @@ services:
       container_name: fsgt-postgres
       volumes:
         - /srv/fsgt/db:/var/lib/postgresql/data
-      environment:
-        - POSTGRES_USER=bap
-        - POSTGRES_PASSWORD=F7tGLQNP
-        - POSTGRES_DB=fsgt
+      env_file:
+        - .env
 
     nginx:
       image: nginx:alpine

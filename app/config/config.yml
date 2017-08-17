@@ -49,11 +49,11 @@ twig:
 doctrine:
     dbal:
         driver: pdo_pgsql
-        host: '%env(DB_HOST)%'
-        port: '%env(DB_PORT)%'
-        dbname: '%env(DB_NAME)%'
-        user: '%env(DB_USER)%'
-        password: '%env(DB_PASSWORD)%'
+        host: '%env(POSTGRES_HOST)%'
+        port: '%env(POSTGRES_PORT)%'
+        dbname: '%env(POSTGRES_DB)%'
+        user: '%env(POSTGRES_USER)%'
+        password: '%env(POSTGRES_PASSWORD)%'
         charset: UTF8
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
