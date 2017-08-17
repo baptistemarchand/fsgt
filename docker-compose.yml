@@ -19,6 +19,7 @@ services:
           - /srv/fsgt/uploads:/uploads
           - .:/app_dev
           - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+          - ./docker/nginx/include:/etc/nginx/include
           - ./docker/nginx/letsencrypt/certs:/etc/letsencrypt
           - ./docker/nginx/letsencrypt/data:/data/letsencrypt
       ports:
