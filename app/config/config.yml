@@ -10,7 +10,7 @@ parameters:
 
 framework:
     #esi: ~
-    translator: { fallbacks: ['fr'] }
+    translator: { fallbacks: ['fr', 'en'] }
     secret: '%env(SECRET)%'
     router:
         resource: '%kernel.project_dir%/app/config/routing.yml'
@@ -99,3 +99,18 @@ vich_uploader:
             uri_prefix: /discount_documents
             upload_destination: '%kernel.project_dir%/web/discount_documents'
             namer: vich_uploader.namer_uniqid
+
+easy_admin:
+    site_name: 'Administration'
+    entities:
+        Club:
+            class: AppBundle\Entity\Club
+        User:
+            class: AppBundle\Entity\User
+            list:
+              fields:
+                - 'email'
+                - 'name'
+                - 'status'
+                - {property: 'medicalCertificateName', type: 'image', base_path: '/medical_certificates'}
+                - {property: 'discountDocumentName', type: 'image', base_path: '/discount_documents'}

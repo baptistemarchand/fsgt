@@ -30,7 +30,7 @@ class User extends BaseUser
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
-    private $updatedAt;
+    public $updatedAt;
     /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
      * of 'UploadedFile' is injected into this setter to trigger the  update. If this
@@ -186,6 +186,11 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     public $last_name;
+
+    public function getName() {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
     /**
      * @ORM\Column(type="date", length=255, nullable=true)
      */
