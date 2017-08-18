@@ -7,9 +7,10 @@ use JavierEguiluz\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdmin
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
+/** @Route("/admin") */
 class AdminController extends BaseAdminController
 {
-    /** @Route("/admin/", name="easyadmin") */
+    /** @Route("/", name="easyadmin") */
     public function indexAction(Request $request)
     {
         return parent::indexAction($request);
