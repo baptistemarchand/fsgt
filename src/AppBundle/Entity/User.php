@@ -163,7 +163,7 @@ class User extends BaseUser
         ;
     }
 
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -190,9 +190,13 @@ class User extends BaseUser
     public function getName() {
         return $this->first_name . ' ' . $this->last_name;
     }
+    public function __toString()
+    {
+        return $this->getName();
+    }
 
     /**
-     * @ORM\Column(type="date", length=255, nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     public $birthday;
     /**
@@ -248,13 +252,18 @@ class User extends BaseUser
      */
     public $has_discount;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Club", inversedBy="users")
+     */
+    public $main_club;
+
     public function setEmail($email)
     {
         $this->setUsername($email);
 
         return parent::setEmail($email);
     }
-    
+
     public function __construct()
     {
         parent::__construct();

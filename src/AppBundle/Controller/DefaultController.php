@@ -7,9 +7,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-use AppBundle\Entity\User;
-use AppBundle\Entity\Club;
-
 class DefaultController extends Controller
 {
     /**
@@ -36,7 +33,7 @@ class DefaultController extends Controller
         }
 
         $em = $this->get('doctrine')->getManager();
-        $users = $em->getRepository(User::class)->findAll();
+        $users = $user->main_club->users;
         $repartition = [
             'new' => 0,
             'in_lottery' => 0,
@@ -48,12 +45,11 @@ class DefaultController extends Controller
 
         foreach ($users as $u)
             $repartition[$u->status] += 1;
-        
+
         return $this->render('default/index.html.twig', [
             'user' => $user,
-            'club' => $this->get('doctrine')->getRepository(Club::class)->find(1), // 1 == 3MQ
             'repartition' => $repartition,
         ]);
     }
-    
+
 }

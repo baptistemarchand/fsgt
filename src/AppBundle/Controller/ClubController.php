@@ -13,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Doctrine\Common\Collections\Criteria;
+
 use AppBundle\Entity\Club;
 use AppBundle\Entity\User;
 
@@ -28,9 +30,8 @@ class ClubController extends Controller
     {
         if ($this->getUser())
             return $this->redirectToRoute('homepage');
-            
+
         $em = $this->get('doctrine')->getManager();
-        $users = $em->getRepository(User::class)->findAll();
         $repartition = [
             'new' => 0,
             'in_lottery' => 0,
@@ -40,9 +41,9 @@ class ClubController extends Controller
             'in_waiting_list' => 0,
         ];
 
-        foreach ($users as $u)
+        foreach ($club->users as $u)
             $repartition[$u->status] += 1;
-       
+
         return $this->render('club/status.html.twig', [
              'club' => $club,
              'repartition' => $repartition,
@@ -57,21 +58,17 @@ class ClubController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
 
         $em = $this->get('doctrine')->getManager();
-        $users = $em->getRepository(User::class)->findBy([], [
-            'id' => 'ASC',
-        ]);
 
-        $users_in_lottery = array_filter($users, function($user) {
-            return $user->status === 'in_lottery';
-        });
+        $inLotteryCriteria = Criteria::create()->where(Criteria::expr()->eq('status', 'in_lottery'));
+        $users_in_lottery = $club->users->matching($inLotteryCriteria);
+
+        $noLotteryStatusCriteria = Criteria::create()->where(Criteria::expr()->eq('temporary_lottery_status', null));
+        $users_without_lottery_status = $users_in_lottery->matching($noLotteryStatusCriteria);
 
         return $this->render('admin/index.html.twig', [
-            'users' => $users,
             'club' => $club,
             'users_in_lottery' => !!count($users_in_lottery),
-            'lottery_ready' => $users_in_lottery && !count(array_filter($users_in_lottery, function($user) {
-                return $user->temporary_lottery_status === null;
-            })),
+            'lottery_ready' => count($users_in_lottery) && !count($users_without_lottery_status),
         ]);
     }
 
@@ -91,7 +88,7 @@ class ClubController extends Controller
             $em->persist($user);
             $em->flush();
         }
-        
+
         return $this->redirectToRoute('admin_panel', [
             'id' => $club->id,
         ]);
@@ -117,21 +114,24 @@ class ClubController extends Controller
             'id' => $club->id,
         ]);
     }
-    
+
     /**
      * @Route("/{id}/open_lottery", name="open_lottery")
      */
     public function openLotteryAction(Club $club)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
-        
-        $em = $this->get('doctrine')->getManager();
-        $users = $em->getRepository(User::class)->findByStatus(['new', 'in_waiting_list']);
 
-        $userEmails = array_map(function ($user) {
+        $em = $this->get('doctrine')->getManager();
+        $users = $club->getUsersByStatus([
+            'new',
+            'in_waiting_list',
+        ]);
+
+        $userEmails = $users->map(function($user) {
             return $user->getEmail();
-        }, $users);
-        
+        })->getValues();
+
         $message = (new \Swift_Message('Ouverture des inscriptions 2018 !'))
                  ->setFrom('contact@troismousquetons.com')
                  ->setBcc($userEmails)
@@ -143,7 +143,7 @@ class ClubController extends Controller
             $this->get('logger')->critical('Some emails failed', [
                 'failures' => $failures,
             ]);
-        
+
         $club->status = 'lottery_open';
         $em->persist($club);
         $em->flush();
@@ -159,9 +159,9 @@ class ClubController extends Controller
     public function reRegistrationAction(Club $club)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
-        
+
         $em = $this->get('doctrine')->getManager();
-        $users = $em->getRepository(User::class)->findByStatus(['member']);
+        $users = $club->getUsersByStatus(['member']);
 
         foreach($users as $user)
         {
@@ -174,11 +174,10 @@ class ClubController extends Controller
 
         $em->flush();
 
-        
-        $userEmails = array_map(function ($user) {
+        $userEmails = $users->map(function($user) {
             return $user->getEmail();
-        }, $users);
-        
+        })->getValues();
+
         $message = (new \Swift_Message('Les Trois Mousquetons - Ré-inscriptions'))
                  ->setFrom('contact@troismousquetons.com')
                  ->setBcc($userEmails)
@@ -198,17 +197,17 @@ class ClubController extends Controller
     public function testLotteryAction(Club $club)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
-        
+
         $em = $this->get('doctrine')->getManager();
         $club->status = 'lottery_closed';
         $em->persist($club);
         $em->flush();
 
-        $users = $em->getRepository(User::class)->findByStatus('in_lottery');
+        $users = $club->getUsersByStatus(['in_lottery'])->toArray();
 
         if (count($users) === 0)
             throw new Exception('No users in lottery');
-        
+
         $winners = array_rand($users, min(count($users), $club->maxWinners));
 
         // Necessary when there is only one user in the lottery
@@ -237,17 +236,17 @@ class ClubController extends Controller
     public function finishLotteryAction(Club $club)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
-        
+
         $em = $this->get('doctrine')->getManager();
         $club->status = 'lottery_closed';
         $em->persist($club);
         $em->flush();
 
-        $users = $em->getRepository(User::class)->findByStatus('in_lottery');
+        $users = $club->getUsersByStatus(['in_lottery']);
 
         $winnerEmails = [];
         $loserEmails = [];
-        
+
         foreach($users as $user)
         {
             if ($user->temporary_lottery_status === 'selected')
@@ -262,7 +261,7 @@ class ClubController extends Controller
             }
             else
                 throw new Exception('User in lottery without temporary_lottery_satus set');
-            
+
             $user->temporary_lottery_status = null;
             $em->persist($user);
         }
@@ -287,7 +286,7 @@ class ClubController extends Controller
 
         if ($loserEmails)
             $this->get('mailer')->send($loserMessage);
-        
+
         return $this->redirectToRoute('admin_panel', [
             'id' => $club->id,
         ]);
@@ -299,7 +298,7 @@ class ClubController extends Controller
     public function export(Club $club)
     {
         $em = $this->get('doctrine')->getManager();
-        $users = $em->getRepository(User::class)->findAll();
+        $users = $club->users->toArray();
 
         $formatedUsers = array_map(function ($user) {
             return [
@@ -327,7 +326,7 @@ class ClubController extends Controller
             fputcsv($out, $user, ';');
         }, $formatedUsers);
         fclose($out);
-        
+
         $response = new Response('');
         $response->headers->set('Content-Type', 'text/plain');
 
@@ -365,7 +364,7 @@ class ClubController extends Controller
             'license_id',
             'license_type',
         ];
-        
+
         if ($form->isSubmitted() && $form->isValid())
         {
             $file = $form->get('submitFile');
@@ -393,14 +392,15 @@ class ClubController extends Controller
                 $u->city = $user['city'];
                 $u->license_id = $user['license_id'];
                 $u->phone_number = $user['phone_number'];
+                $u->main_club = $club;
 
                 $u->setPassword(base64_encode(random_bytes(16)));
-                
+
                 $em->persist($u);
             }
             $em->flush();
             $em->clear();
-            
+
             return $this->redirectToRoute('admin_panel', [
                 'id' => $club->id,
             ]);

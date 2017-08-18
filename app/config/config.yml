@@ -105,12 +105,16 @@ easy_admin:
     entities:
         Club:
             class: AppBundle\Entity\Club
+            label: Clubs
         User:
             class: AppBundle\Entity\User
+            label: Utilisateurs
             list:
               fields:
                 - 'email'
                 - 'name'
                 - 'status'
+                - 'main_club'
+                - 'birthday'
                 - {property: 'medicalCertificateName', type: 'image', base_path: '/medical_certificates'}
                 - {property: 'discountDocumentName', type: 'image', base_path: '/discount_documents'}

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Club
@@ -13,6 +15,29 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Club
 {
+    /**
+     * @ORM\OneToMany(targetEntity="User", mappedBy="main_club")
+     */
+    public $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
+
+    public function getUsersByStatus(array $statuses)
+    {
+        $criteria = Criteria::create()->where(
+            Criteria::expr()->in('status', $statuses)
+        );
+        return $this->users->matching($criteria);
+    }
+
     /**
      * @var int
      *

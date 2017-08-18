@@ -34,20 +34,20 @@ class UserController extends Controller
             if (!$user->basicInfoFilled())
                 throw new \Exception('Missing some required fields in profile');
         }
-        
+
         if ($status !== 'in_lottery' || !in_array($user->status, ['new', 'waiting_list', 'lottery_open']))
             $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
-        
+
         $em = $this->get('doctrine')->getManager();
 
 
         $user->status = $status;
         $em->persist($user);
         $em->flush();
-        
+
         return $this->redirectToRoute('homepage');
     }
-    
+
     /**
      * @Route("/edit", name="edit_user")
      */
@@ -118,7 +118,7 @@ class UserController extends Controller
               ->getForm();
 
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid())
         {
             $user = $form->getData();
@@ -131,7 +131,7 @@ class UserController extends Controller
 
             return $this->redirectToRoute('homepage');
         }
-        
+
         return $this->render('user/edit.html.twig', [
             'form' => $form->createView(),
         ]);

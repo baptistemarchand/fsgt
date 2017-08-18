@@ -11,7 +11,7 @@ use AppBundle\Entity\Club;
 
 class StripeController extends Controller
 {
-    
+
     /**
      * @Route("/charge", name="stripe_charge")
      */
@@ -21,11 +21,11 @@ class StripeController extends Controller
 
         if ($token === null)
             throw new \Exception('Null stripe token');
-        
+
         $use_live_stripe = $this->getParameter('use_live_stripe');
 
         $user = $this->getUser();
-        
+
         \Stripe\Stripe::setApiKey($this->getParameter($use_live_stripe ? 'stripe_live_token' : 'stripe_test_token'));
         $charge = \Stripe\Charge::create([
             'amount' => ($user->has_discount ? 60 : 80) * 100,
@@ -42,7 +42,7 @@ class StripeController extends Controller
 
         return $this->redirectToRoute('homepage');
     }
-    
+
     /**
      * @Route("/stripe/{mode}", name="stripe")
      */
@@ -72,20 +72,20 @@ class StripeController extends Controller
                 'message' => 'type not handled',
                 'type' => $event['type'],
             ]);
-        
+
         $charge_id = $event['data']['object']['id'];
 
         $repo = $this->get('doctrine')->getRepository(User::class);
 
         $user = $repo->findOneBy([
-            'stripe_charge_id' => $charge_id, 
+            'stripe_charge_id' => $charge_id,
         ]);
 
         if ($user === null)
             throw new \Exception('No user found with this charge id.');
 
         $user->payment_status = 'paid';
-        
+
         if ($user->paidAndUploaded())
             $user->status = $user->skill_checked ? 'member' : 'waiting_skill_check';
 
@@ -100,10 +100,10 @@ class StripeController extends Controller
                  ->setBody(
                      $this->renderView('email/charge_succeeded.txt.twig')
                  );
-        
+
         $this->get('mailer')->send($message);
 
-        
+
         return $this->json([
             'success' => true,
         ]);
