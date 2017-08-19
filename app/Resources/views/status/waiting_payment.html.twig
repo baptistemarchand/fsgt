@@ -11,7 +11,11 @@
                     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                     data-label="Payer ma cotisation"
                     data-email="{{user.email}}"
+                    {% if stripe_mode == 'live' %}
+                    data-key="{{stripe_pk_live}}"
+                    {% else %}
                     data-key="{{stripe_pk_test}}"
+                    {% endif %}
                     data-amount="{{user.has_discount ? '6000' : '8000'}}"
                     data-name="{{user.main_club.name}}"
                     data-description="Inscription"
