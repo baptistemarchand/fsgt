@@ -1,7 +1,7 @@
 new: Inscris à la newsletter
 in_lottery: Inscris au tirage au sort
 in_waiting_list: "Sur liste d'attente"
-waiting_certificate: En attente de certificat médical
+waiting_documents: En attente de certificat médical
 waiting_payment: En attente de paiement
 waiting_skill_check: En attente de validation
 member: Membre
@@ -17,7 +17,7 @@ bootstrap:
   member: success
   new: none
   waiting_skill_check: danger
-  waiting_certificate: info
+  waiting_documents: info
   waiting_payment: info
 
 Gender: Sexe

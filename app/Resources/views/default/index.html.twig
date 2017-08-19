@@ -5,33 +5,29 @@
 
         <h3>Salut{{' ' ~user.first_name}},</h3>
 
-        {% if user.state == 'member' %}
-            <h1 class="display-4">Tu es membre des Trois Mousquetons. Bonne grimpe !</h1>
-        {% else %}
-
-            {% if user.state == 'new' %}
-                <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Edite ton profil pour pouvoir t'inscrire</a>
-            {% elseif user.state == 'in_lottery' %}
-                <p class="lead">Tu es inscrit(e) au tirage au sort. Tu seras averti(e) par mail quand nous aurons les résultats.</p>
-            {% elseif user.state == 'waiting_certificate' %}
-                {% include 'status/waiting_certificate.html.twig' %}
-            {% elseif user.state == 'waiting_payment' %}
-                {% include 'status/waiting_payment.html.twig' %}
-            {% elseif user.state == 'in_waiting_list' %}
-                {% include 'status/in_waiting_list.html.twig' %}
-            {% elseif user.state == 'waiting_skill_check' %}
-                <p>
-                    Ton paiement a été validé. Tu y es presque !
-                    Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.
-                    Une fois validé(e) tu seras officiellement membre des Trois Mousquetons !
-                </p>
-            {% endif %}
-
+        {% if user.state == 'new' %}
+            <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Edite ton profil pour pouvoir t'inscrire</a>
+        {% elseif user.state == 'in_lottery' %}
+            <p class="lead">Tu es inscrit(e) au tirage au sort. Tu seras averti(e) par mail quand nous aurons les résultats.</p>
+        {% elseif user.state == 'waiting_documents' %}
+            {% include 'status/waiting_documents.html.twig' %}
+        {% elseif user.state == 'waiting_payment' %}
+            {% include 'status/waiting_payment.html.twig' %}
+        {% elseif user.state == 'in_waiting_list' %}
+            {% include 'status/in_waiting_list.html.twig' %}
+        {% elseif user.state == 'waiting_skill_check' %}
+            <p class="lead">
+                Ton paiement a été validé. Tu y es presque !
+                Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.
+                Une fois validé(e) tu seras officiellement membre des Trois Mousquetons !
+            </p>
+        {% elseif user.state == 'member' %}
+            <p class="lead">Tu es membre des Trois Mousquetons. Bonne grimpe !</p>
         {% endif %}
 
     </div> <!-- jumbo -->
 
-    {% include 'repartition.html.twig'%}
+    {#{% include 'repartition.html.twig'%}#}
 
     {% if is_granted('ROLE_ADMIN') %}
         <div class="alert" style="margin-top:50px">

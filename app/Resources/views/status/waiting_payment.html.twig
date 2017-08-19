@@ -1,32 +1,28 @@
-<div class="card">
-    <div class="card-block">
-        {% if user.payment_status == 'processing' %}
-            <p class="lead">Ton paiement est en cours.</p>
-        {% else %}
+{% if user.payment_status == 'processing' %}
+    <p class="lead">Ton paiement est en cours.</p>
+{% else %}
 
-            <p class="lead">C'est le moment de cotiser ! Le paiement se fait en ligne en passant par le service <a href="http://www.stripe.com" target="_blank">stripe</a>. Il suffit de cliquer sur le bouton ci-dessous :</p>
+    <p class="lead">C'est le moment de cotiser ! Le paiement se fait en ligne en passant par le service <a href="http://www.stripe.com" target="_blank">stripe</a>. Il suffit de cliquer sur le bouton ci-dessous :</p>
 
-            <form action="{{ path('stripe_charge') }}" method="POST">
-                <script
-                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                    data-label="Payer ma cotisation"
-                    data-email="{{user.email}}"
-                    {% if stripe_mode == 'live' %}
-                    data-key="{{stripe_pk_live}}"
-                    {% else %}
-                    data-key="{{stripe_pk_test}}"
-                    {% endif %}
-                    data-amount="{{user.has_discount ? '6000' : '8000'}}"
-                    data-name="{{user.main_club.name}}"
-                    data-description="Inscription"
-                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                    data-locale="auto"
-                    data-zip-code="true"
-                    data-allow-remember-me="false"
-                    data-currency="eur">
-                </script>
-            </form>
+    <form action="{{ path('stripe_charge') }}" method="POST">
+        <script
+            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-label="Payer ma cotisation"
+            data-email="{{user.email}}"
+            {% if stripe_mode == 'live' %}
+            data-key="{{stripe_pk_live}}"
+            {% else %}
+            data-key="{{stripe_pk_test}}"
+            {% endif %}
+            data-amount="{{user.has_discount ? '6000' : '8000'}}"
+            data-name="{{user.main_club.name}}"
+            data-description="Inscription"
+            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+            data-locale="auto"
+            data-zip-code="true"
+            data-allow-remember-me="false"
+            data-currency="eur">
+        </script>
+    </form>
 
-        {% endif %}
-    </div> <!-- card-block -->
-</div> <!-- card -->
+{% endif %}

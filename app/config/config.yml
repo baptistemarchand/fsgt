@@ -41,7 +41,7 @@ framework:
             - new
             - in_waiting_list
             - in_lottery
-            - waiting_certificate
+            - waiting_documents
             - waiting_payment
             - waiting_skill_check
             - member
@@ -54,12 +54,12 @@ framework:
                 to: in_lottery
             win_lottery:
                 from: in_lottery
-                to: waiting_certificate
+                to: waiting_documents
             lose_lottery:
                 from: in_lottery
                 to: in_waiting_list
             upload_certificate:
-                from: waiting_certificate
+                from: waiting_documents
                 to: waiting_payment
             pay:
                 from: waiting_payment
@@ -69,7 +69,7 @@ framework:
                 to: member
             re_subscribe:
                 from: member
-                to: waiting_certificate
+                to: waiting_documents
 
 # Twig Configuration
 twig:
