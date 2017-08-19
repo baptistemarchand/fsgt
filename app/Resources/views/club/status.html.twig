@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block body%}
+{% block title %}
+    {{club.name}}
+{% endblock %}
+
+{% block body %}
     <div class="container">
         <div class="jumbotron" style="margin-top:50px">
             <p class="lead">
@@ -16,7 +20,7 @@
                 <a class="btn btn-lg btn-primary" href="{{path('fos_user_security_login')}}">connecte toi</a>
             </p>
         </div>
-        
+
         <div class="alert alert-info">
             Il y a actuellement <strong>{{repartition['new']}}</strong> personnes inscrites à la newsletter
             et <strong>{{repartition['in_waiting_list']}}</strong> personnes sur liste d'attente.
@@ -30,10 +34,10 @@
 
         <div>
             <h2>Comment ça marche ?</h2>
-            
+
             <p>Ce site est une plateforme de gestion en ligne et automatisée des inscriptions aux Trois Mousquetons. Il est développé par le bureau des Trois Mousquetons.</p>
             <p>Une inscription se passe en plusieurs étapes :</p>
-            
+
             <h4>1. Inscription sur la plateforme</h4>
             <p>Tu devras remplir un formulaire avec ton email pour que l'on puisse te contacter à l'ouverture du tirage au sort et un mot de passe pour que tu puisses te connecter à ton compte. Les autres champs (nom, adresse, etc) sont nécessaires à la création d'une license FSGT mais tu peux si tu le souhaites laisser ces champs vides pour le moment et les remplir plus tard.</p>
 
