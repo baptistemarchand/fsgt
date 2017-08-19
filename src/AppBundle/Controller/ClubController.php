@@ -28,9 +28,6 @@ class ClubController extends Controller
      */
     public function statusAction(Club $club)
     {
-        if ($this->getUser())
-            return $this->redirectToRoute('homepage');
-
         return $this->render('club/status.html.twig', [
              'club' => $club,
              'repartition' => $club->getUserRepartition($this->get('state_machine.workflow')),
@@ -234,16 +231,18 @@ class ClubController extends Controller
         $winnerEmails = [];
         $loserEmails = [];
 
+        $workflow = $this->get('state_machine.workflow');
+
         foreach($users as $user)
         {
             if ($user->temporary_lottery_status === 'selected')
             {
-                $user->status = 'waiting_for_documents';
+                $workflow->apply($user, 'win_lottery');
                 $winnerEmails[] = $user->getEmail();
             }
             elseif ($user->temporary_lottery_status === 'not_selected')
             {
-                $user->status = 'in_waiting_list';
+                $workflow->apply($user, 'lose_lottery');
                 $loserEmails[] = $user->getEmail();
             }
             else

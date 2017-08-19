@@ -1,28 +1,28 @@
-<div class="card-group">
+<div class="card">
+    <div class="card-block">
+        {% if user.payment_status == 'processing' %}
+            <p class="lead">Ton paiement est en cours.</p>
+        {% else %}
 
-    <div class="card">
-        <div class="card-block">
-            <h4 class="card-title">Payer la cotisation</h4>
+            <p class="lead">C'est le moment de cotiser ! Le paiement se fait en ligne en passant par le service <a href="http://www.stripe.com" target="_blank">stripe</a>. Il suffit de cliquer sur le bouton ci-dessous :</p>
 
-            {% if user.payment_status == 'processing' %}
-                <p class="lead">Ton paiement est en cours.</p>
-            {% else %}
+            <form action="{{ path('stripe_charge') }}" method="POST">
+                <script
+                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-label="Payer ma cotisation"
+                    data-email="{{user.email}}"
+                    data-key="{{stripe_pk_test}}"
+                    data-amount="{{user.has_discount ? '6000' : '8000'}}"
+                    data-name="{{user.main_club.name}}"
+                    data-description="Inscription"
+                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                    data-locale="auto"
+                    data-zip-code="true"
+                    data-allow-remember-me="false"
+                    data-currency="eur">
+                </script>
+            </form>
 
-                <form action="{{ path('stripe_charge') }}" method="post" id="payment-form">
-                    <div class="form-row">
-                        <div>
-                            <div id="card-element">
-                                <!-- a Stripe Element will be inserted here. -->
-                            </div>
-
-                            <button class="btn btn-lg btn-primary">Payer {{user.has_discount ? '60' : '80'}}€</button>
-                        </div> <!-- -->
-                        <!-- Used to display Element errors -->
-                        <div id="card-errors" role="alert"></div>
-                    </div><!-- form-row -->
-                </form>
-            {% endif %}
-        </div> <!-- card-block -->
-    </div> <!-- card -->
-
-</div> <!-- card-group -->
+        {% endif %}
+    </div> <!-- card-block -->
+</div> <!-- card -->
