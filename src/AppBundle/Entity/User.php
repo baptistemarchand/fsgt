@@ -17,6 +17,18 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 class User extends BaseUser
 {
     /**
+     * @ORM\Column(type="string")
+     */
+    public $marking = 'new';
+
+    public function getState(): string {
+        return $this->marking;
+    }
+    public function setState(string $state): void {
+        $this->marking = $state;
+    }
+
+    /**
      * @Vich\UploadableField(mapping="medical_certificate", fileNameProperty="medicalCertificateName")
      * @var File
      */
@@ -163,17 +175,12 @@ class User extends BaseUser
         ;
     }
 
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    /**
-     * @ORM\Column(name="status", type="string", length=255)
-     */
-    public $status = 'new';
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */

@@ -1,0 +1,12 @@
+{% if errors is defined and errors %}
+    <div class="alert alert-danger alert-dismissible fade show">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {% for error in errors %}
+            <ul>
+                <li>{{error.message}}</li>
+            </ul>
+        {% endfor %}
+    </div>
+{% endif %}

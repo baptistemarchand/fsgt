@@ -8,7 +8,7 @@
             <button disabled class="btn btn-outline-{% if club.status == 'lottery_open' %}success{%else%}danger{%endif%}">{{club.status|trans}}</button>
             <p>Lors du tirage au sort, {{club.maxWinners}} personnes seront sélectionnées</p>
         </div>
-        
+
         <div class="alert">
             <a href="{{path('open_lottery', {id: club.id})}}"><button class="btn btn-primary">Ouvrir le tirage au sort</button></a>
             <a href="{{path('test_lottery', {id: club.id})}}"><button class="btn btn-primary" {% if not users_in_lottery %} disabled {% endif %}>Tester le tirage au sort</button></a>
@@ -17,7 +17,7 @@
             <a href="{{path('club_export', {id: club.id})}}" target="_blank"><button class="btn btn-secondary">Exporter au format FSGT</button></a>
             <a href="{{path('club_import', {id: club.id})}}"><button class="btn btn-secondary">Importer au format FSGT</button></a>
         </div>
-        
+
         <table class="table table-hover table-bordered table-sm">
             <thead>
                 <tr>
@@ -40,8 +40,8 @@
                     <td>
                         {{ user.email }}
                     </td>
-                    <td class="table-{% if user.status == 'in_lottery' %}{{ ('bootstrap.' ~ user.temporary_lottery_status) | trans }}{%else%}{{ ('bootstrap.' ~ user.status) | trans }}{%endif%}">
-                        {{ user.status | trans }}
+                    <td class="table-{% if user.state == 'in_lottery' %}{{ ('bootstrap.' ~ user.temporary_lottery_status) | trans }}{%else%}{{ ('bootstrap.' ~ user.state) | trans }}{%endif%}">
+                        {{ user.state | trans }}
                     </td>
                     <td>
                         {% if user.skill_checked %}
@@ -80,6 +80,6 @@
                 </tr>
             {% endfor %}
         </table>
-        
+
     </div>
 {% endblock %}

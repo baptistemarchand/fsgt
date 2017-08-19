@@ -4,27 +4,29 @@
     <div class="jumbotron">
 
         <h3>Salut{{' ' ~user.first_name}},</h3>
-        
-        {% if user.status == 'member' %}
+
+        {% if user.state == 'member' %}
             <h1 class="display-4">Tu es membre des Trois Mousquetons. Bonne grimpe !</h1>
         {% else %}
             <p class="lead">Voici le statut de ton inscription:</p>
-            
+
             <div class="card text-center">
 
                 <div class="card-block">
 
-                    <h4 class="card-title">{{user.status|trans}}</h4>
-                    
-                    {% if user.status == 'new' %}   
-                        {% include 'status/new.html.twig' %}
-                    {% elseif user.status == 'in_lottery' %}
+                    <h4 class="card-title">{{user.state|trans}}</h4>
+
+                    {% if user.state == 'new' %}
+                        <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Edite ton profil pour pouvoir t'inscrire</a>
+                    {% elseif user.state == 'in_lottery' %}
                         <p>Tu seras averti(e) par mail quand nous aurons les résultats.</p>
-                    {% elseif user.status == 'waiting_for_documents' %}
-                        {% include 'status/waiting_for_documents.html.twig' %}
-                    {% elseif user.status == 'in_waiting_list' %}
-                        <p>Tu es dans notre liste d'attente et tu recevra un mail au prochaines inscriptions</p>
-                    {% elseif user.status == 'waiting_skill_check' %}
+                    {% elseif user.state == 'waiting_certificate' %}
+                        {% include 'status/waiting_certificate.html.twig' %}
+                    {% elseif user.state == 'waiting_payment' %}
+                        {% include 'status/waiting_payment.html.twig' %}
+                    {% elseif user.state == 'in_waiting_list' %}
+                        {% include 'status/in_waiting_list.html.twig' %}
+                    {% elseif user.state == 'waiting_skill_check' %}
                         <p>
                             Ton paiement a été validé. Tu y es presque !
                             Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.
@@ -35,15 +37,15 @@
                 </div> <!-- card-block -->
             </div> <!-- card -->
         {% endif %}
-        
+
     </div> <!-- jumbo -->
 
     {% include 'repartition.html.twig'%}
-    
+
     {% if is_granted('ROLE_ADMIN') %}
         <div class="alert" style="margin-top:50px">
-            {% for status in ['new', 'in_lottery', 'in_waiting_list', 'waiting_for_documents', 'waiting_skill_check', 'member'] %}
-                <a href="{{ path('change_status', {'status': status}) }}" class="btn btn-secondary">{{status}}</a>
+            {% for state in places %}
+                <a href="{{ path('change_state', {'state': state}) }}" class="btn btn-secondary">{{state}}</a>
             {% endfor %}
         </div>
     {% endif %}

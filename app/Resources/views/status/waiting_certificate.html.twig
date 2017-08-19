@@ -1,0 +1,23 @@
+<div class="card-group">
+
+    {% if not user.medicalCertificateName or not user.discountDocumentName %}
+        <div class="card">
+            <div class="card-block">
+                <h4 class="card-title">
+                    Ajouter ton
+                    {% if not user.medicalCertificateName and not user.discountDocumentName %}
+                        certificat médical et ton justificatif de tarif réduit
+                    {% elseif not user.medicalCertificateName %}
+                        certificat médical
+                    {% elseif not user.discountDocumentName %}
+                        justificatif de tarif réduit
+                    {% endif %}
+                </h4>
+                <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Mon profil</a>
+            </div>
+        </div>
+    {% else %}
+        tout va bien
+    {% endif %}
+
+</div>

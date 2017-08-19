@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use Exception;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,13 +22,13 @@ class StripeController extends Controller
         $token = $request->get('stripeToken');
 
         if ($token === null)
-            throw new \Exception('Null stripe token');
+            throw new Exception('Null stripe token');
 
-        $use_live_stripe = $this->getParameter('use_live_stripe');
+        $stripe_mode = $this->getParameter('stripe_mode'); // live | test
 
         $user = $this->getUser();
 
-        \Stripe\Stripe::setApiKey($this->getParameter($use_live_stripe ? 'stripe_live_token' : 'stripe_test_token'));
+        \Stripe\Stripe::setApiKey($this->getParameter("stripe_${stripe_mode}_token"));
         $charge = \Stripe\Charge::create([
             'amount' => ($user->has_discount ? 60 : 80) * 100,
             'currency' => 'eur',
@@ -62,9 +64,9 @@ class StripeController extends Controller
             );
         } catch(\UnexpectedValueException $e) {
             // Invalid payload
-            throw new \Exception($e->getMessage());
+            throw new Exception($e->getMessage());
         } catch(\Stripe\Error\SignatureVerification $e) {
-            throw new \Exception($e->getMessage());
+            throw new Exception($e->getMessage());
         }
 
         if ($event['type'] !== 'charge.succeeded')
@@ -85,9 +87,10 @@ class StripeController extends Controller
             throw new \Exception('No user found with this charge id.');
 
         $user->payment_status = 'paid';
-
-        if ($user->paidAndUploaded())
-            $user->status = $user->skill_checked ? 'member' : 'waiting_skill_check';
+        $workflow = $this->get('state_machine.workflow');
+        $workflow->apply($user, 'pay');
+        if ($user->skill_checked)
+            $workflow->apply($user, 'get_validated');
 
         $em = $this->get('doctrine')->getManager();
 

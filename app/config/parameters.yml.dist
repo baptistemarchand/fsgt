@@ -1,7 +1,7 @@
 parameters:
 
     #stripe
-    use_live_stripe: '%env(USE_LIVE_STRIPE)%'
+    stripe_mode: '%env(STRIPE_MODE)%'
 
     stripe_test_token: '%env(STRIPE_TEST_TOKEN)%'
     stripe_live_token: '%env(STRIPE_LIVE_TOKEN)%'

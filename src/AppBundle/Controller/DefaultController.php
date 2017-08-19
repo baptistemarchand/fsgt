@@ -16,39 +16,22 @@ class DefaultController extends Controller
     {
         $user = $this->getUser();
 
-        if ($user->status === 'waiting_for_documents' && $user->paidAndUploaded())
-        {
-            $user->status = $user->skill_checked ? 'member' : 'waiting_skill_check';
-            $em = $this->get('doctrine')->getManager();
-            $em->persist($user);
-            $em->flush();
-        }
-
         if ($user->basic_info_filled !== $user->basicInfoFilled())
         {
-            $em = $this->get('doctrine')->getManager();
             $user->basic_info_filled = $user->basicInfoFilled();
+
+            $em = $this->get('doctrine')->getManager();
             $em->persist($user);
             $em->flush();
         }
 
-        $em = $this->get('doctrine')->getManager();
-        $users = $user->main_club->users;
-        $repartition = [
-            'new' => 0,
-            'in_lottery' => 0,
-            'waiting_for_documents' => 0,
-            'waiting_skill_check' => 0,
-            'member' => 0,
-            'in_waiting_list' => 0,
-        ];
-
-        foreach ($users as $u)
-            $repartition[$u->status] += 1;
+        $repartition = $user->main_club->getUserRepartition($this->get('state_machine.workflow'));
 
         return $this->render('default/index.html.twig', [
             'user' => $user,
             'repartition' => $repartition,
+            'errors' => $request->get('errors'),
+            'places' => array_keys($repartition),
         ]);
     }
 

@@ -15,6 +15,11 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
+use Symfony\Component\Workflow\Exception\LogicException;
+use AppBundle\Exception\UserException;
+use AppBundle\Exception\WorkflowException;
+use Exception;
+
 use AppBundle\Entity\User;
 
 /**
@@ -23,25 +28,40 @@ use AppBundle\Entity\User;
 class UserController extends Controller
 {
     /**
-     * @Route("/status/{status}", name="change_status")
+     * @Route("/state/{state}", name="change_state")
      */
-    public function changeStatusAction(Request $request, string $status)
+    public function changeState(string $state)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
+
+        $user = $this->getUser();
+        $user->setState($state);
+
+        $em = $this->get('doctrine')->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * @Route("/request_lottery_participation", name="request_lottery_participation")
+     */
+    public function requestLotteryParticipation()
     {
         $user = $this->getUser();
 
-        if ($status === 'in_lottery')
-        {
-            if (!$user->basicInfoFilled())
-                throw new \Exception('Missing some required fields in profile');
+        if (!$user->basicInfoFilled())
+            throw new UserException('Pour participer au tirage au sort il faut avoir remplis son profil.');
+
+        $workflow = $this->get('state_machine.workflow');
+        try {
+            $workflow->apply($user, 'enter_lottery');
+        } catch (LogicException $e) {
+            throw new UserException('Impossible de participer au tirage au sort');
         }
 
-        if ($status !== 'in_lottery' || !in_array($user->status, ['new', 'waiting_list', 'lottery_open']))
-            $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
-
         $em = $this->get('doctrine')->getManager();
-
-
-        $user->status = $status;
         $em->persist($user);
         $em->flush();
 
@@ -51,7 +71,7 @@ class UserController extends Controller
     /**
      * @Route("/edit", name="edit_user")
      */
-    public function editUserAction(Request $request)
+    public function editUser(Request $request)
     {
         $user = $this->getUser();
 

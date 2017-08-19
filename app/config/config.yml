@@ -32,6 +32,44 @@ framework:
     assets: ~
     php_errors:
         log: true
+    workflows:
+      workflow:
+        type: 'state_machine'
+        supports:
+            - AppBundle\Entity\User
+        places:
+            - new
+            - in_waiting_list
+            - in_lottery
+            - waiting_certificate
+            - waiting_payment
+            - waiting_skill_check
+            - member
+        transitions:
+            fill_profile:
+                from: new
+                to: in_waiting_list
+            enter_lottery:
+                from: in_waiting_list
+                to: in_lottery
+            win_lottery:
+                from: in_lottery
+                to: waiting_certificate
+            lose_lottery:
+                from: in_lottery
+                to: in_waiting_list
+            upload_certificate:
+                from: waiting_certificate
+                to: waiting_payment
+            pay:
+                from: waiting_payment
+                to: waiting_skill_check
+            get_validated:
+                from: waiting_skill_check
+                to: member
+            re_subscribe:
+                from: member
+                to: waiting_certificate
 
 # Twig Configuration
 twig:
@@ -41,7 +79,7 @@ twig:
         - 'bootstrap_3_layout.html.twig'
         - 'VichUploaderBundle:Form:fields.html.twig'
     globals:
-      use_live_stripe: '%use_live_stripe%'
+      stripe_mode: '%stripe_mode%'
       stripe_pk_live: pk_live_bfNJ1zkGYlXlZaE3xXvu4VSP
       stripe_pk_test: pk_test_TRg4a2iSWUBcPsTeHChtD5OY
 
@@ -87,7 +125,7 @@ fos_user:
     from_email:
         address: '%env(MAILER_USER)%'
         sender_name: '%env(MAILER_USER)%'
-        
+
 vich_uploader:
     db_driver: orm
     mappings:
@@ -113,7 +151,7 @@ easy_admin:
               fields:
                 - 'email'
                 - 'name'
-                - 'status'
+                - 'marking'
                 - 'main_club'
                 - 'birthday'
                 - {property: 'medicalCertificateName', type: 'image', base_path: '/medical_certificates'}

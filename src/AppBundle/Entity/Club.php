@@ -30,12 +30,23 @@ class Club
         return $this->name;
     }
 
-    public function getUsersByStatus(array $statuses)
+    public function getUsersByState(array $states)
     {
         $criteria = Criteria::create()->where(
-            Criteria::expr()->in('status', $statuses)
+            Criteria::expr()->in('marking', $states)
         );
         return $this->users->matching($criteria);
+    }
+
+    public function getUserRepartition($workflow)
+    {
+        $places = $workflow->getDefinition()->getPlaces();
+        $repartition = array_fill_keys($places, 0);
+
+        foreach ($this->users as $user)
+            $repartition[$user->getState()] += 1;
+
+        return $repartition;
     }
 
     /**
@@ -75,4 +86,3 @@ class Club
      */
     public $maxWinners = 0;
 }
-

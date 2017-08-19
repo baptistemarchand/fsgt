@@ -31,22 +31,9 @@ class ClubController extends Controller
         if ($this->getUser())
             return $this->redirectToRoute('homepage');
 
-        $em = $this->get('doctrine')->getManager();
-        $repartition = [
-            'new' => 0,
-            'in_lottery' => 0,
-            'waiting_for_documents' => 0,
-            'waiting_skill_check' => 0,
-            'member' => 0,
-            'in_waiting_list' => 0,
-        ];
-
-        foreach ($club->users as $u)
-            $repartition[$u->status] += 1;
-
         return $this->render('club/status.html.twig', [
              'club' => $club,
-             'repartition' => $repartition,
+             'repartition' => $club->getUserRepartition($this->get('state_machine.workflow')),
         ]);
     }
 
@@ -59,7 +46,7 @@ class ClubController extends Controller
 
         $em = $this->get('doctrine')->getManager();
 
-        $inLotteryCriteria = Criteria::create()->where(Criteria::expr()->eq('status', 'in_lottery'));
+        $inLotteryCriteria = Criteria::create()->where(Criteria::expr()->eq('marking', 'in_lottery'));
         $users_in_lottery = $club->users->matching($inLotteryCriteria);
 
         $noLotteryStatusCriteria = Criteria::create()->where(Criteria::expr()->eq('temporary_lottery_status', null));
@@ -123,7 +110,7 @@ class ClubController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
 
         $em = $this->get('doctrine')->getManager();
-        $users = $club->getUsersByStatus([
+        $users = $club->getUsersByState([
             'new',
             'in_waiting_list',
         ]);
@@ -161,7 +148,7 @@ class ClubController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
 
         $em = $this->get('doctrine')->getManager();
-        $users = $club->getUsersByStatus(['member']);
+        $users = $club->getUsersByState(['member']);
 
         foreach($users as $user)
         {
@@ -203,7 +190,7 @@ class ClubController extends Controller
         $em->persist($club);
         $em->flush();
 
-        $users = $club->getUsersByStatus(['in_lottery'])->toArray();
+        $users = $club->getUsersByState(['in_lottery'])->toArray();
 
         if (count($users) === 0)
             throw new Exception('No users in lottery');
@@ -242,7 +229,7 @@ class ClubController extends Controller
         $em->persist($club);
         $em->flush();
 
-        $users = $club->getUsersByStatus(['in_lottery']);
+        $users = $club->getUsersByState(['in_lottery']);
 
         $winnerEmails = [];
         $loserEmails = [];
