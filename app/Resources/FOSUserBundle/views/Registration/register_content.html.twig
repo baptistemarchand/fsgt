@@ -1,10 +1,21 @@
 {% block fos_user_content %}
 
-    <div class="container pop" style="max-width: 600px">
-
-        <h1>S'inscrire</h1>
+    <div class="container pop" style="max-width: 600px;">
 
         {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
+
+        <div class="row form-group">
+            <div class="col">
+                {{ form_label (form.first_name)}}
+                {{ form_errors(form.first_name)}}
+                {{ form_widget(form.first_name)}}
+            </div>
+            <div class="col">
+                {{ form_label (form.main_club)}}
+                {{ form_errors(form.main_club)}}
+                {{ form_widget(form.main_club)}}
+            </div>
+        </div>
 
         {{ form_row(form.email) }}
 
@@ -21,66 +32,18 @@
             </div>
         </div>
 
-        <div class="row form-group">
-            <div class="col">
-                {{ form_label(form.first_name)}}
-                {{ form_errors(form.first_name)}}
-                {{ form_widget(form.first_name)}}
-            </div>
-            <div class="col">
-                {{ form_label(form.last_name)}}
-                {{ form_errors(form.last_name)}}
-                {{ form_widget(form.last_name)}}
-            </div>
-        </div>
-
-        <div class="row form-group">
-            <div class="col">
-                {{ form_label (form.birthday)}}
-                {{ form_errors(form.birthday)}}
-                {{ form_widget(form.birthday)}}
-            </div>
-            <div class="col">
-                {{ form_label (form.gender)}}
-                {{ form_errors(form.gender)}}
-                {{ form_widget(form.gender)}}
-            </div>
-        </div>
-
-        <div class="row form-group">
-            <div class="col">
-                {{ form_label (form.address)}}
-                {{ form_errors(form.address)}}
-                {{ form_widget(form.address)}}
-            </div>
-        </div>
-        <div class="row form-group">
-            <div class="col-8">
-                {{ form_label (form.city)}}
-                {{ form_errors(form.city)}}
-                {{ form_widget(form.city)}}
-            </div>
-            <div class="col-4">
-                {{ form_label (form.zip_code)}}
-                {{ form_errors(form.zip_code)}}
-                {{ form_widget(form.zip_code)}}
-            </div>
-        </div>
-
-        {{ form_rest(form) }}
-
         <div>
             <input class="btn btn-lg btn-primary btn-block" type="submit" value="S'inscrire" />
         </div>
 
         {{ form_end(form) }}
 
-        <a href="{{path('homepage')}}">Déjà inscrit ?</a>
+        <!-- <a href="{{path('homepage')}}">Déjà inscrit ?</a> -->
 
-        <div class="alert alert-info" style="margin-top:20px">
+        <div class="cnil">
             Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé par Les Trois Mousquetons pour la gestion des inscriptions.
             Elles sont conservées jusqu'à la suppression du compte.
-            Conformément à la loi <a href="https://www.cnil.fr/fr/loi-78-17-du-6-janvier-1978-modifiee">«informatique et libertés»</a>,
+            Conformément à la loi <a target="_blank" href="https://www.cnil.fr/fr/loi-78-17-du-6-janvier-1978-modifiee">«informatique et libertés»</a>,
             vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier en contactant Les Trois Mousquetons (contact@troismousquetons.com).
         </div>
     </div>

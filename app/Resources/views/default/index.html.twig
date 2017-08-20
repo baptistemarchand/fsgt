@@ -5,12 +5,13 @@
 {% endblock %}
 
 {% block content %}
+
     <div class="jumbotron pop">
 
         <h4>Salut{{' ' ~user.first_name}},</h4>
 
         {% if user.state == 'new' %}
-            <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Edite ton profil pour pouvoir t'inscrire</a>
+            {% include 'status/new.html.twig' %}
         {% elseif user.state == 'in_lottery' %}
             <p class="lead">Tu es inscrit(e) au tirage au sort. Tu seras averti(e) par mail quand nous aurons les résultats.</p>
         {% elseif user.state == 'waiting_documents' %}

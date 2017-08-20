@@ -6,26 +6,32 @@ body {
     height: 100%;
     background: #FF8008;  /* fallback for old browsers */
     /* background: -webkit-linear-gradient(to left, #FFC837, #FF8008);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to left, #FF8008, #FFC837); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to top right, #FF8008, #FFC837); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .pop {
     background-color: white;
-    -webkit-box-shadow: 0px 8px 30px -4px rgba(0,0,0,0.5);
-    -moz-box-shadow: 0px 8px 30px -4px rgba(0,0,0,0.5);
-    box-shadow: 0px 8px 30px -4px rgba(0,0,0,0.5);
-    border-radius: .3rem;
+    /* -webkit-box-shadow: 0px 8px 30px -4px rgba(0,0,0,0.5); */
+    /* -moz-box-shadow: 0px 8px 30px -4px rgba(0,0,0,0.5); */
+    box-shadow: 0px 8px 30px -4px #9d4c00;
+    border-radius: .4rem;
     padding: 30px;
+    color: #444;
+    margin: 0 auto;
 }
 
 .btn-primary {
-    background-color: #FF8008;
-    border-color: #FF8008;
+    background: linear-gradient(to top, #FF8008, #FFC837); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border: none;
+    border-radius: 2rem;
 }
 
 .btn-primary:hover {
     background-color: #FFC837;
-    border-color: #FFC837;
+}
+
+h1 {
+    color: white;
 }
 
 .nav-item a {
@@ -42,7 +48,16 @@ body {
 }
 
 .required::after {
-    content: ' *';
+    /*content: ' *';*/
+}
+
+.cnil {
+    margin-top: 30px;
+    color: #aaa;
+}
+
+.cnil a {
+    color: #FFC837;
 }
 
 .form-signin {

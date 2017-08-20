@@ -1,5 +1,6 @@
 <?php
 namespace AppBundle\Form;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseRegistrationFormType;
@@ -12,26 +13,16 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->remove('username')
-            ->add('first_name')
-            ->add('last_name')
-            ->add('gender', ChoiceType::class, [
-                'label' => 'Sexe',
-                'required' => false,
-                'choices' => [
-                    'Homme' => 'male',
-                    'Femme' => 'female',
-                ],
+            ->add('first_name', null, [
+                'required' => true,
             ])
-            ->add('birthday', BirthdayType::class, [
-                'widget' => 'single_text',
-                'required' => false,
+            ->add('main_club', null, [
+                'label' => 'Club',
+                'required' => true,
             ])
-            ->add('address')
-            ->add('city')
-            ->add('zip_code')
-            ->add('does_not_need_training')
         ;
     }
+
     public function getParent()
     {
         return BaseRegistrationFormType::class;
