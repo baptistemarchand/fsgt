@@ -60,15 +60,19 @@ class ClubController extends Controller
      * @Route("/{id}/set_skill_checked/{user_id}", name="set_skill_checked")
      * @ParamConverter("user", class="AppBundle:User", options={"id" = "user_id"})
      */
-    public function setSkillCheckedAction(Club $club, User $user)
+    public function setSkillChecked(Club $club, User $user)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
 
         if ($user->skill_checked !== true) {
-            $em = $this->get('doctrine')->getManager();
             $user->skill_checked = true;
-            if ($user->status === 'waiting_skill_check')
-                $user->status = 'member';
+
+            $workflow = $this->get('state_machine.workflow');
+
+            if ($workflow->can($user, 'get_validated'))
+                $workflow->apply($user, 'get_validated');
+
+            $em = $this->get('doctrine')->getManager();
             $em->persist($user);
             $em->flush();
         }
@@ -88,7 +92,7 @@ class ClubController extends Controller
 
         $em = $this->get('doctrine')->getManager();
         $user->skill_checked = false;
-        $user->status = 'new';
+        $user->marking = 'new';
         $user->payment_status = null;
         $user->setMedicalCertificateName(null);
         $em->persist($user);
@@ -149,7 +153,9 @@ class ClubController extends Controller
 
         foreach($users as $user)
         {
-            $user->status = 'waiting_for_documents';
+            $workflow = $this->get('state_machine.workflow');
+            $workflow->apply($user, 're_subscribe');
+
             $user->payment_status = null;
             $user->last_year_medical_certificate = $user->getMedicalCertificateName();
             $user->setMedicalCertificateName(null);
