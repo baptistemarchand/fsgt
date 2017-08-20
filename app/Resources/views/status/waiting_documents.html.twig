@@ -1,7 +1,13 @@
 {% if not user.medicalCertificateName %}
-    <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Ajoute ton certificat médical</a>
+    <div class="lead">
+        <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Ajoute ton certificat médical</a>
+        Le certificat doit <strong>obligatoirement</strong> mentionner que tu es apte à pratiquer l'escalde <strong>et les activitées de montagne</strong>.
+    </div>
 {% endif %}
 
 {% if not user.discountDocumentName %}
-    <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Ajoute ton justificatif de tarif réduit</a>
+    <div class="lead">
+        <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Ajoute ton justificatif de tarif réduit</a>
+        Étudiant, chômeur ou RSA.
+    </div>
 {% endif %}
