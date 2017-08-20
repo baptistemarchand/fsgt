@@ -1,9 +1,9 @@
 {% block fos_user_content %}
 
-    <div class="container" style="max-width: 600px">
-    
+    <div class="container pop" style="max-width: 600px">
+
         <h1>S'inscrire</h1>
-        
+
         {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
 
         {{ form_row(form.email) }}
@@ -33,7 +33,7 @@
                 {{ form_widget(form.last_name)}}
             </div>
         </div>
-        
+
         <div class="row form-group">
             <div class="col">
                 {{ form_label (form.birthday)}}
@@ -68,15 +68,15 @@
         </div>
 
         {{ form_rest(form) }}
-        
+
         <div>
             <input class="btn btn-lg btn-primary btn-block" type="submit" value="S'inscrire" />
         </div>
 
         {{ form_end(form) }}
-        
+
         <a href="{{path('homepage')}}">Déjà inscrit ?</a>
-        
+
         <div class="alert alert-info" style="margin-top:20px">
             Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé par Les Trois Mousquetons pour la gestion des inscriptions.
             Elles sont conservées jusqu'à la suppression du compte.
@@ -84,5 +84,5 @@
             vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier en contactant Les Trois Mousquetons (contact@troismousquetons.com).
         </div>
     </div>
-    
+
 {% endblock %}

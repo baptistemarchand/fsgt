@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block content %}
-    <div class="jumbotron">
+    <div class="jumbotron pop">
 
-        <h3>Salut{{' ' ~user.first_name}},</h3>
+        <h4>Salut{{' ' ~user.first_name}},</h4>
 
         {% if user.state == 'new' %}
             <a href="{{ path('edit_user') }}" class="btn btn-lg btn-primary">Edite ton profil pour pouvoir t'inscrire</a>
@@ -20,11 +20,13 @@
         {% elseif user.state == 'in_waiting_list' %}
             {% include 'status/in_waiting_list.html.twig' %}
         {% elseif user.state == 'waiting_skill_check' %}
-            <p class="lead">
-                Ton paiement a été validé. Tu y es presque !
-                Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.
-                Une fois validé(e) tu seras officiellement membre des Trois Mousquetons !
-            </p>
+            <div class="lead">
+                <p>Ton paiement a été validé. Tu y es presque !</p>
+                <p>
+                    Un membre du club doit maintenant effectuer ta formation ou valider ton autonomie.
+                    Une fois validé(e) tu seras officiellement membre des Trois Mousquetons !
+                </p>
+            </div>
         {% elseif user.state == 'member' %}
             <p class="lead">Tu es membre des Trois Mousquetons. Bonne grimpe !</p>
         {% endif %}
@@ -33,14 +35,14 @@
 
     {#{% include 'repartition.html.twig'%}#}
 
+{% endblock %}
+
+{% block footer %}
     {% if is_granted('ROLE_ADMIN') %}
-        <div class="alert" style="margin-top:50px">
+        <div style="position:absolute; bottom: 0px;" class="nav-item">
             {% for state in places %}
-                <a href="{{ path('change_state', {'state': state}) }}" class="btn btn-secondary">{{state}}</a>
+                <a href="{{ path('change_state', {'state': state}) }}" style="margin: 10px;">{{state}}</a>
             {% endfor %}
         </div>
     {% endif %}
-
-
-
 {% endblock %}
