@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 use AppBundle\Entity\User;
 
@@ -39,7 +40,57 @@ class DefaultController extends Controller
             }
             else
                 return $this->render('default/index.html.twig', [
-                    'form' => $form->createView(),
+                    'profile_form' => $form->createView(),
+                    'user' => $user,
+                    'places' => array_keys($repartition),
+                ]);
+        }
+
+        if ($user->getState() === 'waiting_certificate')
+        {
+            $form = $this->getCertificateForm($user);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid())
+            {
+                $user = $form->getData();
+
+                $workflow = $this->get('state_machine.workflow');
+                $workflow->apply($user, 'upload_certificate');
+
+                if (!$user->has_discount)
+                    $workflow->apply($user, 'upload_discount_document');
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+            }
+            else
+                return $this->render('default/index.html.twig', [
+                    'certificate_form' => $form->createView(),
+                    'user' => $user,
+                    'places' => array_keys($repartition),
+                ]);
+        }
+
+        if ($user->getState() === 'waiting_discount_document')
+        {
+            $form = $this->getDiscountDocumentForm($user);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid())
+            {
+                $user = $form->getData();
+                $workflow = $this->get('state_machine.workflow');
+                $workflow->apply($user, 'upload_discount_document');
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+            }
+            else
+                return $this->render('default/index.html.twig', [
+                    'discount_form' => $form->createView(),
                     'user' => $user,
                     'places' => array_keys($repartition),
                 ]);
@@ -51,6 +102,26 @@ class DefaultController extends Controller
             //            'errors' => $request->get('errors'),
             'places' => array_keys($repartition),
         ]);
+    }
+
+    protected function getCertificateForm(User $user)
+    {
+        return $this->createFormBuilder($user)
+            ->add('medicalCertificateFile', VichFileType::class, [
+                'label' => 'Certificat Médical',
+                'required' => true,
+                'allow_delete' => false,
+            ])->getForm();
+    }
+
+    protected function getDiscountDocumentForm(User $user)
+    {
+        return $this->createFormBuilder($user)
+            ->add('discountDocumentFile', VichFileType::class, [
+                'label' => 'Justificatif de tarif réduit',
+                'required' => true,
+                'allow_delete' => false,
+            ])->getForm();
     }
 
     protected function getUserEditForm(User $user)

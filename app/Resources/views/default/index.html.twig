@@ -14,8 +14,10 @@
             {% include 'status/new.html.twig' %}
         {% elseif user.state == 'in_lottery' %}
             <p class="lead">Tu es inscrit(e) au tirage au sort. Tu seras averti(e) par mail quand nous aurons les résultats.</p>
-        {% elseif user.state == 'waiting_documents' %}
-            {% include 'status/waiting_documents.html.twig' %}
+        {% elseif user.state == 'waiting_certificate' %}
+            {% include 'status/waiting_certificate.html.twig' %}
+        {% elseif user.state == 'waiting_discount_document' %}
+            {% include 'status/waiting_discount_document.html.twig' %}
         {% elseif user.state == 'waiting_payment' %}
             {% include 'status/waiting_payment.html.twig' %}
         {% elseif user.state == 'in_waiting_list' %}

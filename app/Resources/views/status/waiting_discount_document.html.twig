@@ -1,0 +1,13 @@
+{{ form_start(discount_form, {'method': 'post', 'action': path('homepage')}) }}
+
+<p class="lead">
+    lol
+</p>
+
+{{ form_row(discount_form.discountDocumentFile)}}
+
+<div>
+    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Ajouter" />
+</div>
+
+{{ form_end(discount_form) }}

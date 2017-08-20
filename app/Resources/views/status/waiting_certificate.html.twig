@@ -1,0 +1,13 @@
+{{ form_start(certificate_form, {'method': 'post', 'action': path('homepage')}) }}
+
+<p class="lead">
+    Le certificat médical doit <strong>obligatoirement</strong> mentionner que tu es apte à pratiquer l'escalade <strong>et les activitées de montagne</strong>.
+</p>
+
+{{ form_row(certificate_form.medicalCertificateFile)}}
+
+<div>
+    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Ajouter" />
+</div>
+
+{{ form_end(certificate_form) }}
