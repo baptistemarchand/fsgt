@@ -42,10 +42,14 @@
 
 {% block footer %}
     {% if is_granted('ROLE_ADMIN') %}
-        <div style="position:absolute; bottom: 0px;" class="nav-item">
+        <ul style="position:absolute; bottom: 0px; left: -30px; list-style:none; color: #44A08D">
             {% for state in places %}
-                <a href="{{ path('change_state', {'state': state}) }}" style="margin: 10px;">{{state}}</a>
+                <li>
+                    <a href="{{ path('change_state', {'state': state}) }}" style="">
+                        <i class="fa fa-{{('fa-' ~ state)|trans}}"></i>
+                    </a>
+                </li>
             {% endfor %}
-        </div>
+        </ul>
     {% endif %}
 {% endblock %}

@@ -29,3 +29,12 @@ Address: Adresse
 City: Ville
 'Zip code': Code postal
 'Does not need training': "Je sais grimper et assurer en tête"
+
+fa-new: envelope
+fa-in_waiting_list: hourglass
+fa-in_lottery: star-half-o
+fa-waiting_certificate: file-pdf-o
+fa-waiting_discount_document: file
+fa-waiting_payment: credit-card
+fa-waiting_skill_check: mortar-board
+fa-member: user

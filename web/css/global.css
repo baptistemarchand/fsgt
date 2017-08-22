@@ -2,11 +2,19 @@ html {
     height: 100%;
 }
 
+.vertical-center {
+    display: flex;
+    align-items: center;
+    min-height: 100%;
+    min-height: 100vh;
+}
+
 body {
     height: 100%;
     background: #FF8008;  /* fallback for old browsers */
     /* background: -webkit-linear-gradient(to left, #FFC837, #FF8008);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to top right, #093637, #44A08D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background-attachment: fixed;
 }
 
 .pop {
@@ -50,7 +58,7 @@ a,a:hover,a:visited {text-decoration: none; color: #296f66;}
 }
 
 .jumbotron {
-    width: 800px;
+    max-width: 800px;
 }
 
 #admin-container {

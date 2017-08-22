@@ -2,31 +2,23 @@
 
 {% block body %}
 
-<div class="container">
-
-  <div class="header clearfix">
     <nav>
       <ul class="nav nav-pills float-right">
         {% if is_granted('ROLE_ADMIN') %}
         <li class="nav-item">
-          <a class="nav-link" href="{{ path('admin_panel', {id: 1}) }}">admin</a>
+          <a class="nav-link" href="{{ path('admin_panel', {id: 1}) }}"><i class="fa fa-cog"></i></a>
         </li>
         {% endif %}
         <li class="nav-item">
-          <a class="nav-link" href="{{ path('edit_user') }}">editer son profil</a>
+          <a class="nav-link" href="{{ path('edit_user') }}"><i class="fa fa-user"></i></a>
         </li>
       </ul>
     </nav>
-<!--    <h3 class="text-muted">FSGT</h3> -->
+
+  <div class="container vertical-center">
+      {% block content%}{% endblock %}
   </div>
 
-  {% block errors%}
-      {% include 'errors.html.twig' %}
-  {% endblock %}
-
-  {% block content%}{% endblock %}
-
-</div> <!-- /container -->
 
 {% block footer %}
 {% endblock %}
