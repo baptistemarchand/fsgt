@@ -13,7 +13,7 @@
         <ul style="float: right;" class="admin-nav">
             {% if club.status == 'lottery_closed' %}
                 <li>
-                    <a href="{{path('open_lottery', {id: club.id})}}"><i class="fa fa-send"></i> Ouvrir le tirage au sort</a>
+                    <a href="{{path('open_lottery', {id: club.id})}}"><i class="fa fa-rocket"></i> Ouvrir le tirage au sort</a>
                 </li>
             {% endif %}
             {% if users_in_lottery > 0 %}
@@ -96,7 +96,11 @@
                         {% endif %}
                     </td>
                     <td>
-                        {{user.payment_status}}
+                        {% if user.payment_status == 'paid' %}
+                            <i class="fa fa-check"></i>
+                        {% elseif user.payment_status == 'processing' %}
+                            <i class="fa fa-hourglass"></i>
+                        {% endif %}
                     </td>
                     <td>
                         {% if user.has_discount %}
