@@ -273,8 +273,8 @@ class ClubController extends Controller
 
         $formatedUsers = array_map(function ($user) {
             return [
-                'last_name' => strtoupper($user->last_name),
-                'first_name' => strtolower($user->first_name),
+                'last_name' => strtoupper($user->last_name ?: ''),
+                'first_name' => strtolower($user->first_name ?: ''),
                 'birthday' => $user->birthday ? $user->birthday->format('d/m/y') : '',
                 'gender'    => $user->gender == 'male' ? 'M' : 'F',
                 'address'   => $user->address,
