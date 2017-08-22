@@ -7,8 +7,8 @@ waiting_skill_check: En attente de validation
 member: Membre
 
 
-lottery_open: Inscriptions ouvertes
-lottery_closed: Inscriptions fermées
+lottery_open: Les inscriptions sont ouvertes.
+lottery_closed: Les inscriptions sont fermées.
 
 bootstrap:
   selected: success

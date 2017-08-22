@@ -195,7 +195,7 @@ class User extends BaseUser
     public $last_name;
 
     public function getName() {
-        return $this->first_name . ' ' . $this->last_name;
+        return ucwords(strtolower($this->first_name . ' ' . $this->last_name));
     }
     public function __toString()
     {

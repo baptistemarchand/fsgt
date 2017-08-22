@@ -2,21 +2,40 @@
 
 {% block body %}
     <div class="container pop" id="admin-container">
-        <a href="{{path('homepage')}}"><h2>{{club.name}}</h2></a>
 
-        <div class="alert">
-            <button disabled class="btn btn-outline-{% if club.status == 'lottery_open' %}success{%else%}danger{%endif%}">{{club.status|trans}}</button>
-            <p>Lors du tirage au sort, {{club.maxWinners}} personnes seront sélectionnées</p>
+        <div style="float: left;" class="lead">
+            <a href="{{path('homepage')}}"><h2>{{club.name}}</h2></a>
+            <p>{{club.status|trans}}</p>
+            <p>Il y a actuellement {{users_in_lottery}} personnes inscrites au tirage au sort.</p>
+            <p>Lors du tirage au sort, {{club.maxWinners}} personnes seront sélectionnées.</p>
         </div>
 
-        <div class="alert">
-            <a href="{{path('open_lottery', {id: club.id})}}"><button class="btn btn-primary">Ouvrir le tirage au sort</button></a>
-            <a href="{{path('test_lottery', {id: club.id})}}"><button class="btn btn-primary" {% if not users_in_lottery %} disabled {% endif %}>Tester le tirage au sort</button></a>
-            <a href="{{path('finish_lottery', {id: club.id})}}"><button class="btn btn-primary" {% if not lottery_ready %} disabled {% endif %}>Valider le tirage au sort</button></a>
-            <a href="{{path('re_registration', {id: club.id})}}"><button class="btn btn-primary">Lancer les réinscriptions</button></a>
-            <a href="{{path('club_export', {id: club.id})}}" target="_blank"><button class="btn btn-secondary">Exporter au format FSGT</button></a>
-            <a href="{{path('club_import', {id: club.id})}}"><button class="btn btn-secondary">Importer au format FSGT</button></a>
-        </div>
+        <ul style="float: right;" class="admin-nav">
+            {% if club.status == 'lottery_closed' %}
+                <li>
+                    <a href="{{path('open_lottery', {id: club.id})}}"><i class="fa fa-send"></i> Ouvrir le tirage au sort</a>
+                </li>
+            {% endif %}
+            {% if users_in_lottery > 0 %}
+                <li>
+                    <a href="{{path('test_lottery', {id: club.id})}}"><i class="fa fa-cog"></i> Tester le tirage au sort</a>
+                </li>
+            {% endif %}
+            {% if lottery_ready %}
+                <li>
+                    <a href="{{path('finish_lottery', {id: club.id})}}"><i class="fa fa-rocket"></i> Valider le tirage au sort</a>
+                </li>
+            {% endif %}
+            <li>
+                <a href="{{path('re_registration', {id: club.id})}}"><i class="fa fa-refresh"></i> Lancer les réinscriptions</a>
+            </li>
+            <li>
+                <a href="{{path('club_export', {id: club.id})}}" target="_blank"><i class="fa fa-download"></i> Exporter au format FSGT</a>
+            </li>
+            <li>
+                <a href="{{path('club_import', {id: club.id})}}"><i class="fa fa-upload"></i> Importer au format FSGT</a>
+            </li>
+        </ul>
 
         <table class="table table-hover table-bordered table-sm">
             <thead>
@@ -29,26 +48,45 @@
                     <th>Paiement</th>
                     <th>Réduction</th>
                     <th>Activé</th>
-                    <th>Reset</th>
                 </tr>
             </thead>
             {% for user in club.users %}
                 <tr>
                     <td>
-                        {{ user.first_name }} {{ user.last_name }}
+                        {{ user.name }}
                     </td>
                     <td>
                         {{ user.email }}
                     </td>
-                    <td class="table-{% if user.state == 'in_lottery' %}{{ ('bootstrap.' ~ user.temporary_lottery_status) | trans }}{%else%}{{ ('bootstrap.' ~ user.state) | trans }}{%endif%}">
-                        {{ user.state | trans }}
+                    <td>
+                        {% if user.state == 'new' %}
+                            <i class="fa fa-envelope fa-lg" title="Inscrit à la mailing list"></i>
+                        {% elseif user.state == 'in_waiting_list' %}
+                            <i class="fa fa-hourglass fa-lg" title="Sur list d'attente"></i>
+                        {% elseif user.state == 'in_lottery' and user.temporary_lottery_status == 'selected' %}
+                            <i class="fa fa-star fa-lg" title="Gagnant"></i>
+                        {% elseif user.state == 'in_lottery' and user.temporary_lottery_status == 'not_selected' %}
+                            <i class="fa fa-star-o fa-lg" title="Perdant"></i>
+                        {% elseif user.state == 'in_lottery' %}
+                            <i class="fa fa-star-half-o fa-lg" title="Dans le tirage au sort"></i>
+                        {% elseif user.state == 'waiting_certificate' or user.state == 'waiting_discount_document' %}
+                            <i class="fa fa-file-pdf-o fa-lg" title="En attente de documents"></i>
+                        {% elseif user.state == 'waiting_payment' %}
+                            <i class="fa fa-credit-card fa-lg" title="En attente de paiement"></i>
+                        {% elseif user.state == 'waiting_skill_check' %}
+                            <i class="fa fa-mortar-board fa-lg" title="En attente de validation"></i>
+                        {% elseif user.state == 'member' %}
+                            <i class="fa fa-user fa-lg" title="Membre"></i>
+                        {% else %}
+                            {{ user.state | trans }}
+                        {% endif %}
                     </td>
                     <td>
                         {% if user.skill_checked %}
-                            Validé(e)
+                            <i class="fa fa-check"></i>
                         {% else %}
                             <a href="{{path('set_skill_checked', {id: club.id, user_id: user.id})}}">
-                                <button class="btn btn-success" style="width: 100%;">Marquer comme Validé(e)</button>
+                                <button class="btn btn-primary">valider</button>
                             </a>
                         {% endif %}
                     </td>
@@ -70,12 +108,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        {{ user.enabled ? 'Oui' : 'Non' }}
-                    </td>
-                    <td>
-                        <a href="{{path('reset_user', {id: club.id, user_id: user.id})}}">
-                            <button class="btn" style="width: 100%;">Reset</button>
-                        </a>
+                        <i class="fa fa-{{ user.enabled ? 'check' : 'close' }}"></i>
                     </td>
                 </tr>
             {% endfor %}

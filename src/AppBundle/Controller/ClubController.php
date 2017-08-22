@@ -51,7 +51,7 @@ class ClubController extends Controller
 
         return $this->render('admin/index.html.twig', [
             'club' => $club,
-            'users_in_lottery' => !!count($users_in_lottery),
+            'users_in_lottery' => count($users_in_lottery),
             'lottery_ready' => count($users_in_lottery) && !count($users_without_lottery_status),
         ]);
     }
@@ -76,27 +76,6 @@ class ClubController extends Controller
             $em->persist($user);
             $em->flush();
         }
-
-        return $this->redirectToRoute('admin_panel', [
-            'id' => $club->id,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/reset_user/{user_id}", name="reset_user")
-     * @ParamConverter("user", class="AppBundle:User", options={"id" = "user_id"})
-     */
-    public function resetUserAction(Club $club, User $user)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
-
-        $em = $this->get('doctrine')->getManager();
-        $user->skill_checked = false;
-        $user->marking = 'new';
-        $user->payment_status = null;
-        $user->setMedicalCertificateName(null);
-        $em->persist($user);
-        $em->flush();
 
         return $this->redirectToRoute('admin_panel', [
             'id' => $club->id,

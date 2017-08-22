@@ -27,6 +27,12 @@ body {
 /*    border-radius: 2rem;*/
 }
 
+a,a:hover,a:visited {text-decoration: none; color: #296f66;}
+
+#admin-container h2 {
+    color: #296f66;
+}
+
 .btn-primary:hover {
     background-color: #44A08D;
 }
@@ -35,6 +41,9 @@ body {
     color: #44A08D;
 }
 
+.admin-nav {
+    list-style: none;
+}
 
 .nav-item a {
     color: white;
