@@ -2,8 +2,8 @@
 
 {% block body %}
 
-    <nav>
-      <ul class="nav nav-pills float-right">
+    <nav style="position:absolute;top:0px;right:0px;">
+      <ul class="nav">
         {% if is_granted('ROLE_ADMIN') %}
         <li class="nav-item">
           <a class="nav-link" href="{{ path('admin_panel', {id: 1}) }}"><i class="fa fa-cog"></i></a>
