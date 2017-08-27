@@ -30,7 +30,7 @@ class StripeController extends Controller
 
         \Stripe\Stripe::setApiKey($this->getParameter("stripe_${stripe_mode}_token"));
         $charge = \Stripe\Charge::create([
-            'amount' => ($user->has_discount ? 60 : 80) * 100,
+            'amount' => ($user->has_discount ? 60 : 85) * 100,
             'currency' => 'eur',
             'source' => $token
         ]);
