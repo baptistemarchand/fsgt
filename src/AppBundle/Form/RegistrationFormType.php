@@ -19,7 +19,6 @@ class RegistrationFormType extends AbstractType
             ->add('main_club', null, [
                 'label' => 'Club',
                 'required' => true,
-                'disabled' => true,
                 'preferred_choices' => function ($val, $key) {
                     return $val->name === 'Les Trois Mousquetons';
                 },
