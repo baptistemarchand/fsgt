@@ -47,6 +47,7 @@
                     <th>Certificat Médical</th>
                     <th>Paiement</th>
                     <th>Réduction</th>
+                    <th>Autonome</th>
                     <th>Activé</th>
                 </tr>
             </thead>
@@ -112,7 +113,14 @@
                         {% endif %}
                     </td>
                     <td>
-                        <i class="fa fa-{{ user.enabled ? 'check' : 'close' }}"></i>
+                        {% if user.does_not_need_training %}
+                            <i class="fa fa-check"></i>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.enabled %}
+                            <i class="fa fa-check"></i>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
