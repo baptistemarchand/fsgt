@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
 use AppBundle\Entity\User;
@@ -135,10 +136,13 @@ class DefaultController extends Controller
                 'label' => 'Nom',
                 'required' => true,
             ])
-            ->add('birthday', null, [
+            ->add('birthday', BirthdayType::class, [
                 'widget' => 'single_text',
                 'label' => 'Date de naissance',
                 'required' => true,
+                'html5' => false,
+                'widget' => 'choice',
+                'format' => 'ddMMyyyy',
             ])
             ->add('gender', ChoiceType::class, [
                 'label' => 'Sexe',
