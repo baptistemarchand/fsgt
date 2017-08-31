@@ -1,0 +1,16 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+    <div class="container pop" style="max-width: 600px;">
+        <p>Félicitations, ton compte est maintenant activé.</p>
+        <p>
+            <a href="{{url('homepage')}}">
+                <button class="btn btn-primary">
+                    Clique ici pour remplir ton profil !
+                </button>
+            </a>
+        </p>
+    </div>
+{% endblock fos_user_content %}
