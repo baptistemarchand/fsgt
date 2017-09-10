@@ -83,6 +83,22 @@ class ClubController extends Controller
     }
 
     /**
+     * @Route("/{id}/resend_email/{user_id}", name="resend_email")
+     * @ParamConverter("user", class="AppBundle:User", options={"id" = "user_id"})
+     */
+    public function resendEmail(Club $club, User $user)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
+
+        $mailer = $this->get('fos_user.mailer');
+        $res = $mailer->sendConfirmationEmailMessage($user);
+
+        return $this->redirectToRoute('admin_panel', [
+            'id' => $club->id,
+        ]);
+    }
+
+    /**
      * @Route("/{id}/open_lottery", name="open_lottery")
      */
     public function openLotteryAction(Club $club)
