@@ -89,8 +89,6 @@ class StripeController extends Controller
         $user->payment_status = 'paid';
         $workflow = $this->get('state_machine.workflow');
         $workflow->apply($user, 'pay');
-        if ($user->skill_checked)
-            $workflow->apply($user, 'get_validated');
 
         $em = $this->get('doctrine')->getManager();
 

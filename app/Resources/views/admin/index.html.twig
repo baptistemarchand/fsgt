@@ -51,7 +51,7 @@
                     <th>Activé</th>
                 </tr>
             </thead>
-            {% for user in club.users %}
+            {% for user in club.users|sort %}
                 <tr>
                     <td>
                         {{ user.name }}

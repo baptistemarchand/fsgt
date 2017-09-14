@@ -55,7 +55,7 @@ framework:
                 to: in_lottery
             win_lottery:
                 from: in_lottery
-                to: waiting_certificate
+                to: waiting_payment
             lose_lottery:
                 from: in_lottery
                 to: in_waiting_list
@@ -64,16 +64,16 @@ framework:
                 to: waiting_discount_document
             upload_discount_document:
                 from: waiting_discount_document
-                to: waiting_payment
+                to: waiting_skill_check
             pay:
                 from: waiting_payment
-                to: waiting_skill_check
+                to: waiting_certificate
             get_validated:
                 from: waiting_skill_check
                 to: member
             re_subscribe:
                 from: member
-                to: waiting_certificate
+                to: waiting_payment
 
 # Twig Configuration
 twig:

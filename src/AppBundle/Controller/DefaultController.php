@@ -61,6 +61,8 @@ class DefaultController extends Controller
 
                 if (!$user->has_discount)
                     $workflow->apply($user, 'upload_discount_document');
+                if ($user->skill_checked)
+                    $workflow->apply($user, 'get_validated');
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($user);
@@ -84,6 +86,9 @@ class DefaultController extends Controller
                 $user = $form->getData();
                 $workflow = $this->get('state_machine.workflow');
                 $workflow->apply($user, 'upload_discount_document');
+
+                if ($user->skill_checked)
+                    $workflow->apply($user, 'get_validated');
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($user);
