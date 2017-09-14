@@ -55,6 +55,9 @@
                 <tr>
                     <td>
                         {{ user.name }}
+                        {% if user.vip %}
+                            <i class="fa fa-gift" title="vip"></i>
+                        {% endif %}
                     </td>
                     <td>
                         {{ user.email }}

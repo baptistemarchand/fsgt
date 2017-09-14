@@ -258,11 +258,14 @@ class User extends BaseUser
      * @ORM\Column(type="boolean", nullable=true)
      */
     public $has_discount;
-
     /**
      * @ORM\ManyToOne(targetEntity="Club", inversedBy="users")
      */
     public $main_club;
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    public $vip = false;
 
     public function setEmail($email)
     {
