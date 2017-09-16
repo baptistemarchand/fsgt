@@ -7,7 +7,7 @@
             <a href="{{path('homepage')}}"><h2>{{club.name}}</h2></a>
             <p>{{club.status|trans}}</p>
             <p>Il y a actuellement {{users_in_lottery}} personnes inscrites au tirage au sort.</p>
-            <p>Lors du tirage au sort, {{club.maxWinners}} personnes seront sélectionnées.</p>
+            <p>Lors du tirage au sort, {{club.maxWinners}} personnes seront sélectionnées, dont {{club.percentageOfExperienced * 100}}% d'autonomes.</p>
         </div>
 
         <ul style="float: right;" class="admin-nav">

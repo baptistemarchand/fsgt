@@ -193,15 +193,53 @@ class ClubController extends Controller
         if (count($users) === 0)
             throw new Exception('No users in lottery');
 
-        $winners = array_rand($users, min(count($users), $club->maxWinners));
+        $numberOfExperienced = (int)($club->maxWinners * $club->percentageOfExperienced);
+        $numberOfBeginners = $club->maxWinners - $numberOfExperienced;
 
-        // Necessary when there is only one user in the lottery
-        if (!is_array($winners))
-            $winners = [$winners];
+        $beginners = [];
+        $experienced = [];
 
-        foreach($users as $i => $user)
+        foreach($users as $user)
         {
-            if (in_array($i, $winners))
+            if ($user->vip)
+            {
+                $user->temporary_lottery_status = 'selected';
+                if ($user->does_not_need_training)
+                    $numberOfExperienced -= 1;
+                else
+                    $numberOfBeginners -= 1;
+            }
+            else if ($user->does_not_need_training)
+                $experienced[] = $user;
+            else
+                $beginners[] = $user;
+        }
+
+        if ($numberOfBeginners < 0)
+            $numberOfBeginners = 0;
+        if ($numberOfExperienced < 0)
+            $numberOfExperienced = 0;
+        //        var_dump($numberOfExperienced, $numberOfBeginners);die;
+        $beginnerWinners = $numberOfBeginners === 0 ? [] : array_rand($beginners, min(count($beginners), $numberOfBeginners));
+        $experiencedWinners = $numberOfExperienced === 0 ? [] : array_rand($experienced, min(count($experienced), $numberOfExperienced));
+
+        // when there is only one result, array_rand does not return an array
+        if (!is_array($beginnerWinners))
+            $beginnerWinners = [$beginnerWinners];
+        if (!is_array($experiencedWinners))
+            $experiencedWinners = [$experiencedWinners];
+
+        foreach($beginners as $i => $user)
+        {
+            if (in_array($i, $beginnerWinners))
+                $user->temporary_lottery_status = 'selected';
+            else
+                $user->temporary_lottery_status = 'not_selected';
+            $em->persist($user);
+        }
+        foreach($experienced as $i => $user)
+        {
+            if (in_array($i, $experiencedWinners))
                 $user->temporary_lottery_status = 'selected';
             else
                 $user->temporary_lottery_status = 'not_selected';

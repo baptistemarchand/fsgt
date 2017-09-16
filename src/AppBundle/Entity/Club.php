@@ -85,4 +85,11 @@ class Club
      * @ORM\Column(name="max_winners", type="integer")
      */
     public $maxWinners = 0;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="percentage_of_experienced", type="float")
+     */
+    public $percentageOfExperienced = 0.5;
 }
