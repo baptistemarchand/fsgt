@@ -4,7 +4,7 @@
 
     <nav style="position:absolute;top:0px;right:0px;">
       <ul class="nav">
-        {% if is_granted('ROLE_ADMIN') %}
+        {% if is_granted('ROLE_BUREAU') %}
         <li class="nav-item">
           <a class="nav-link" href="{{ path('admin_panel', {id: user.main_club.id}) }}"><i class="fa fa-cog"></i></a>
         </li>

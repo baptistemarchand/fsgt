@@ -11,29 +11,31 @@
         </div>
 
         <ul style="float: right;" class="admin-nav">
-            {% if club.status == 'lottery_closed' %}
+            {% if is_granted('ROLE_ADMIN') %}
+                {% if club.status == 'lottery_closed' %}
+                    <li>
+                        <a href="{{path('open_lottery', {id: club.id})}}"><i class="fa fa-rocket"></i> Ouvrir le tirage au sort</a>
+                    </li>
+                {% endif %}
+                {% if users_in_lottery > 0 %}
+                    <li>
+                        <a href="{{path('test_lottery', {id: club.id})}}"><i class="fa fa-cog"></i> Tester le tirage au sort</a>
+                    </li>
+                {% endif %}
+                {% if lottery_ready %}
+                    <li>
+                        <a href="{{path('finish_lottery', {id: club.id})}}"><i class="fa fa-rocket"></i> Valider le tirage au sort</a>
+                    </li>
+                {% endif %}
                 <li>
-                    <a href="{{path('open_lottery', {id: club.id})}}"><i class="fa fa-rocket"></i> Ouvrir le tirage au sort</a>
+                    <a href="{{path('re_registration', {id: club.id})}}"><i class="fa fa-refresh"></i> Lancer les réinscriptions</a>
+                </li>
+                <li>
+                    <a href="{{path('club_import', {id: club.id})}}"><i class="fa fa-upload"></i> Importer au format FSGT</a>
                 </li>
             {% endif %}
-            {% if users_in_lottery > 0 %}
-                <li>
-                    <a href="{{path('test_lottery', {id: club.id})}}"><i class="fa fa-cog"></i> Tester le tirage au sort</a>
-                </li>
-            {% endif %}
-            {% if lottery_ready %}
-                <li>
-                    <a href="{{path('finish_lottery', {id: club.id})}}"><i class="fa fa-rocket"></i> Valider le tirage au sort</a>
-                </li>
-            {% endif %}
-            <li>
-                <a href="{{path('re_registration', {id: club.id})}}"><i class="fa fa-refresh"></i> Lancer les réinscriptions</a>
-            </li>
             <li>
                 <a href="{{path('club_export', {id: club.id})}}" target="_blank"><i class="fa fa-download"></i> Exporter au format FSGT</a>
-            </li>
-            <li>
-                <a href="{{path('club_import', {id: club.id})}}"><i class="fa fa-upload"></i> Importer au format FSGT</a>
             </li>
         </ul>
 

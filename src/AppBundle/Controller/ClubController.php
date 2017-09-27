@@ -39,7 +39,7 @@ class ClubController extends Controller
      */
     public function adminPanelAction(Club $club)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
+        $this->denyAccessUnlessGranted('ROLE_BUREAU', null, 'Vous devez être membre du bureau');
 
         $em = $this->get('doctrine')->getManager();
 
@@ -62,7 +62,7 @@ class ClubController extends Controller
      */
     public function setSkillChecked(Club $club, User $user)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
+        $this->denyAccessUnlessGranted('ROLE_BUREAU', null, 'Vous devez être membre du bureau');
 
         if ($user->skill_checked !== true) {
             $user->skill_checked = true;
