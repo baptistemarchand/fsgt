@@ -86,6 +86,10 @@
                         {% else %}
                             {{ user.state | trans }}
                         {% endif %}
+
+                        {% if 'ROLE_BUREAU' in user.roles %}
+                            <i class="fa fa-cog" title="Bureau"></i>
+                        {% endif %}
                     </td>
                     <td>
                         {% if user.skill_checked %}
