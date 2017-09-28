@@ -38,6 +38,14 @@ class Club
         return $this->users->matching($criteria);
     }
 
+    public function getUsersNeedingLicenses()
+    {
+        $criteria = Criteria::create()->where(
+            Criteria::expr()->eq('needs_license', true)
+        );
+        return $this->users->matching($criteria);
+    }
+
     public function getUserRepartition($workflow)
     {
         $places = $workflow->getDefinition()->getPlaces();

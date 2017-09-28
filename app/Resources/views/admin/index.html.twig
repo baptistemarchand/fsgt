@@ -50,6 +50,7 @@
                     <th>Paiement</th>
                     <th>Réduction</th>
                     <th>Autonome</th>
+                    <th>Lisense</th>
                     <th>Activé</th>
                 </tr>
             </thead>
@@ -124,6 +125,11 @@
                     <td>
                         {% if user.does_not_need_training %}
                             <i class="fa fa-check"></i>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.needs_license %}
+                            <i class="fa fa-id-card fa-lg" title="À commander"></i>
                         {% endif %}
                     </td>
                     <td>

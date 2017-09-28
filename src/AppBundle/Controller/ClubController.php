@@ -323,7 +323,7 @@ class ClubController extends Controller
     public function export(Club $club)
     {
         $em = $this->get('doctrine')->getManager();
-        $users = $club->users->toArray();
+        $users = $club->getUsersNeedingLicenses()->toArray();
 
         $formatedUsers = array_map(function ($user) {
             return [

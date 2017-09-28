@@ -263,9 +263,13 @@ class User extends BaseUser
      */
     public $main_club;
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+    * @ORM\Column(type="boolean", nullable=true)
      */
     public $vip = false;
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    public $needs_license = false;
 
     public function setEmail($email)
     {
