@@ -69,7 +69,7 @@
                         {% if user.state == 'new' %}
                             <i class="fa fa-envelope fa-lg" title="Inscrit à la mailing list"></i>
                         {% elseif user.state == 'in_waiting_list' %}
-                            <i class="fa fa-hourglass fa-lg" title="Sur list d'attente"></i>
+                            <i class="fa fa-hourglass fa-lg" title="Sur liste d'attente"></i>
                         {% elseif user.state == 'in_lottery' and user.temporary_lottery_status == 'selected' %}
                             <i class="fa fa-star fa-lg" title="Gagnant"></i>
                         {% elseif user.state == 'in_lottery' and user.temporary_lottery_status == 'not_selected' %}
