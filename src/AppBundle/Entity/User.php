@@ -270,6 +270,20 @@ class User extends BaseUser
      * @ORM\Column(type="boolean", nullable=true)
      */
     public $needs_license = false;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    public $other_club_license_id = null;
+
+    public function getPrice()
+    {
+        if ($this->other_club_license_id !== null)
+            $amount = 52;
+        else
+            $amount = $this->has_discount ? 60 : 85;
+
+        return $amount * 100;
+    }
 
     public function setEmail($email)
     {

@@ -14,7 +14,7 @@
             {% else %}
             data-key="{{stripe_pk_test}}"
             {% endif %}
-            data-amount="{{user.has_discount ? '6000' : '8500'}}"
+            data-amount="{{user.price}}"
             data-name="{{user.main_club.name}}"
             data-description="Inscription"
             data-image="https://stripe.com/img/documentation/checkout/marketplace.png"

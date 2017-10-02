@@ -132,6 +132,9 @@ class UserController extends Controller
                   'required' => false,
                   'allow_delete' => false,
               ])
+              ->add('other_club_license_id', null, [
+                  'label' => 'Si tu es membre d\'un autre club FSGT cette année, indique ton numéro de license (pour ne pas payer l\'assurance en double)',
+              ])
               ->add('save', SubmitType::class, [
                   'label' => 'Enregistrer',
               ])
