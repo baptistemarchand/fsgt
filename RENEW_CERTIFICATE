@@ -1,0 +1,1 @@
+sudo certbot certonly --webroot -w /home/bap/fsgt/web/ -d bap.ovh -d www.bap.ovh -d inscriptions.3mq.fr -d inscriptions.troismousquetons.com
