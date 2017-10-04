@@ -326,10 +326,10 @@ class ClubController extends Controller
         $users = $club->getUsersNeedingLicenses()->toArray();
 
         $formatedUsers = array_map(function ($user) {
-            return [
+            $fields = [
                 'last_name' => strtoupper($user->last_name ?: ''),
                 'first_name' => strtolower($user->first_name ?: ''),
-                'birthday' => $user->birthday ? $user->birthday->format('d/m/y') : '',
+                'birthday' => $user->birthday ? $user->birthday->format('d/m/Y') : '',
                 'gender'    => $user->gender == 'male' ? 'M' : 'F',
                 'address'   => $user->address,
                 'address2'  => '',
@@ -344,6 +344,9 @@ class ClubController extends Controller
                 'license_id' => $user->license_id,
                 'license_type' => 'OMNI',
             ];
+            return array_map(function ($field) {
+                return iconv('UTF-8', 'ISO-8859-1', $field ?: '');
+            }, $fields);
         }, $users);
 
         $out = fopen('php://output', 'w');
@@ -353,7 +356,8 @@ class ClubController extends Controller
         fclose($out);
 
         $response = new Response('');
-        $response->headers->set('Content-Type', 'text/plain');
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->setCharset('ISO-8859-1');
 
         return $response;
     }
