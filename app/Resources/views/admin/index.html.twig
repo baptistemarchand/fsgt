@@ -31,6 +31,9 @@
                     <a href="{{path('re_registration', {id: club.id})}}"><i class="fa fa-refresh"></i> Lancer les réinscriptions</a>
                 </li>
                 <li>
+                    <a href="{{path('add_users_from_waiting_list', {id: club.id})}}"><i class="fa fa-user-plus"></i> Repêcher 5 personnes</a>
+                </li>
+                <li>
                     <a href="{{path('club_import', {id: club.id})}}"><i class="fa fa-upload"></i> Importer au format FSGT</a>
                 </li>
             {% endif %}

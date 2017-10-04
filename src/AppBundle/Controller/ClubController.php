@@ -254,6 +254,38 @@ class ClubController extends Controller
     }
 
     /**
+     * @Route("/{id}/add_users_from_waiting_list", name="add_users_from_waiting_list")
+     */
+    public function addUsersFromWaitingListAction(Club $club)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'You need to be an admin to do this!');
+
+        $em = $this->get('doctrine')->getManager();
+
+        $users = $club->getWaitingListUsers()->toArray();
+
+        $users = array_filter($users, function($u){return $u->basicInfoFilled();});
+
+        if (count($users) === 0)
+            throw new Exception('No valid users in waiting list');
+
+        $users = array_slice($users, 0, 5);
+
+        foreach($users as $user)
+        {
+            $user->temporary_lottery_status = 'selected';
+            $user->marking = 'in_lottery';
+            $em->persist($user);
+        }
+
+        $em->flush();
+
+        return $this->redirectToRoute('admin_panel', [
+            'id' => $club->id,
+        ]);
+    }
+
+    /**
      * @Route("/{id}/finish_lottery", name="finish_lottery")
      */
     public function finishLotteryAction(Club $club)

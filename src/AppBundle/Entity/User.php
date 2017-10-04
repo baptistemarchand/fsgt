@@ -263,7 +263,7 @@ class User extends BaseUser
      */
     public $main_club;
     /**
-    * @ORM\Column(type="boolean", nullable=true)
+    * @ORM\Column(type="boolean")
      */
     public $vip = false;
     /**

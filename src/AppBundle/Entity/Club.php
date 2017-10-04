@@ -46,6 +46,17 @@ class Club
         return $this->users->matching($criteria);
     }
 
+    public function getWaitingListUsers()
+    {
+        $criteria = Criteria::create()
+                  ->where(Criteria::expr()->eq('marking', 'in_waiting_list'))
+                  ->orderBy([
+                      'vip' => Criteria::DESC,
+                      'id' => Criteria::ASC,
+                  ]);
+        return $this->users->matching($criteria);
+    }
+
     public function getUserRepartition($workflow)
     {
         $places = $workflow->getDefinition()->getPlaces();
