@@ -381,15 +381,62 @@ class ClubController extends Controller
             }, $fields);
         }, $users);
 
+        ob_start();
         $out = fopen('php://output', 'w');
         array_map(function ($user) use ($out) {
             fputcsv($out, $user, ';');
         }, $formatedUsers);
         fclose($out);
+        $content = ob_get_clean();
 
-        $response = new Response('');
+        $response = new Response($content);
         $response->headers->set('Content-Type', 'text/csv');
         $response->setCharset('ISO-8859-1');
+
+        return $response;
+    }
+
+    /**
+     * @Route("/{id}/export_drive", name="club_export_drive")
+     */
+    public function exportDrive(Club $club)
+    {
+        $em = $this->get('doctrine')->getManager();
+        $users = $club->users->toArray();
+
+        $formatedUsers = array_map(function ($user) {
+            return [
+                'nom' => strtolower($user->last_name ?: ''),
+                'prénom' => strtolower($user->first_name ?: ''),
+                'date_de_naissance' => $user->birthday ? $user->birthday->format('Y-m-d') : '',
+                'sexe'    => $user->gender == 'male' ? 'M' : 'F',
+                'adresse'   => $user->address,
+                'code_postal' => $user->zip_code,
+                'ville'      => $user->city,
+                'téléphone' => $user->phone_number,
+                'email' => $user->getEmail(),
+                'numéro_de_license' => $user->license_id,
+                'validé' => $user->skill_checked ? 'oui' : 'non',
+                'status' => $user->marking,
+                'certificat_médical' => $user->getMedicalCertificateName() ? 'oui' : 'non',
+                'paiement' => $user->payment_status == 'paid' ? 'payé' : '',
+                'réduction' => $user->has_discount ? 'oui' : 'non',
+                'justificatif_réduction' => $user->getDiscountDocumentName() ? 'oui' : 'non',
+                'autonome' => $user->does_not_need_training ? 'oui' : 'non',
+            ];
+        }, $users);
+
+        ob_start();
+        $out = fopen('php://output', 'w');
+        fputcsv($out, array_keys($formatedUsers[0]));
+        array_map(function ($user) use ($out) {
+            fputcsv($out, $user);
+        }, $formatedUsers);
+        fclose($out);
+        $content = ob_get_clean();
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'text/csv');
 
         return $response;
     }

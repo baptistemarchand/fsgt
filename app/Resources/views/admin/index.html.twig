@@ -33,12 +33,18 @@
                 <li>
                     <a href="{{path('add_users_from_waiting_list', {id: club.id})}}"><i class="fa fa-user-plus"></i> Repêcher 5 personnes</a>
                 </li>
-                <li>
-                    <a href="{{path('club_import', {id: club.id})}}"><i class="fa fa-upload"></i> Importer au format FSGT</a>
-                </li>
+                {% if false %}
+                    <li>
+                        <a href="{{path('club_import', {id: club.id})}}"><i class="fa fa-upload"></i> Importer au format FSGT</a>
+                    </li>
+                {% endif %}
+
             {% endif %}
             <li>
                 <a href="{{path('club_export', {id: club.id})}}" target="_blank"><i class="fa fa-download"></i> Exporter au format FSGT</a>
+            </li>
+            <li>
+                <a href="{{path('club_export_drive', {id: club.id})}}" target="_blank"><i class="fa fa-download"></i> Exporter pour Drive</a>
             </li>
         </ul>
 
@@ -53,7 +59,7 @@
                     <th>Paiement</th>
                     <th>Réduction</th>
                     <th>Autonome</th>
-                    <th>Lisense</th>
+                    <th>Licence</th>
                     <th>Activé</th>
                 </tr>
             </thead>
