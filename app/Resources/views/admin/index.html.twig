@@ -140,6 +140,14 @@
                         {% if user.needs_license %}
                             <i class="fa fa-id-card fa-lg" title="À commander"></i>
                         {% endif %}
+
+                        <a href="{{path('toggle_needs_license', {id: club.id, user_id: user.id})}}">
+                            {% if user.needs_license %}
+                                <i class="fa fa-minus fa-lg" title="Exclure de l'export FSGT"></i>
+                            {% else %}
+                                <i class="fa fa-plus fa-lg" title="Inclure dans l'export FSGT"></i>
+                            {% endif %}
+                        </a>
                     </td>
                     <td>
                         {% if user.enabled %}

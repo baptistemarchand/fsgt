@@ -83,6 +83,25 @@ class ClubController extends Controller
     }
 
     /**
+     * @Route("/{id}/toggle_needs_license/{user_id}", name="toggle_needs_license")
+     * @ParamConverter("user", class="AppBundle:User", options={"id" = "user_id"})
+     */
+    public function toggleNeedsLicense(Club $club, User $user)
+    {
+        $this->denyAccessUnlessGranted('ROLE_BUREAU', null, 'Vous devez être membre du bureau');
+
+        $user->needs_license = !$user->needs_license;
+
+        $em = $this->get('doctrine')->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_panel', [
+            'id' => $club->id,
+        ]);
+    }
+
+    /**
      * @Route("/{id}/resend_email/{user_id}", name="resend_email")
      * @ParamConverter("user", class="AppBundle:User", options={"id" = "user_id"})
      */
