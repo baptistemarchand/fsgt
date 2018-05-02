@@ -1,1 +1,3 @@
 sudo certbot certonly --webroot -w /home/bap/fsgt/web/ -d bap.ovh -d www.bap.ovh -d inscriptions.3mq.fr -d inscriptions.troismousquetons.com
+cp /etc/letsencrypt/live/inscriptions.troismousquetons.com/* docker/nginx/letsencrypt/certs/live/inscriptions.troismousquetons.com/
+docker kill -s HUP fsgt-nginx (or docker-compose down; docker-compose up to check errors)
