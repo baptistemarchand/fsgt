@@ -8,6 +8,9 @@ sudo ./deploy.sh
 
 # Doc
 
+Présentation du site :
+https://docs.google.com/document/d/16Cvu5m183eTv7Vas0a8-_4VeoGNqds2r0mNsddMnHMw/edit
+
 Flow d'inscription :
 https://inscriptions.3mq.fr/flow.png
 
