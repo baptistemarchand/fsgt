@@ -63,7 +63,7 @@
                     <th>Activé</th>
                 </tr>
             </thead>
-            {% for user in club.users|sort %}
+            {% for user in club.users|sort if user.state != 'in_waiting_list' and user.state != 'new' %}
                 <tr>
                     <td>
                         {{ user.name }}
