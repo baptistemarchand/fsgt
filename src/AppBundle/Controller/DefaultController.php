@@ -35,6 +35,12 @@ class DefaultController extends Controller
                 $user = $form->getData();
                 $workflow = $this->get('state_machine.workflow');
                 $workflow->apply($user, 'fill_profile');
+                $oldUsersEmails = explode(',', getenv('OLD_USERS_EMAILS'));
+                if (in_array($user->getEmail(), $oldUsersEmails))
+                {
+                    $workflow->apply($user, 'enter_lottery');
+                    $workflow->apply($user, 'win_lottery');
+                }
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($user);
                 $em->flush();
